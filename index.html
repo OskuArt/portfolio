@@ -75,7 +75,7 @@ section{padding:56px 0}
 .head{border-top:1px solid var(--line);padding-top:15px;margin-bottom:23px;display:flex;justify-content:space-between;align-items:end;gap:30px}
 .head h2{font-size:clamp(48px,7vw,96px);line-height:.9;letter-spacing:-.063em;font-weight:500;margin:0}
 .head p{max-width:420px;color:var(--muted);font-size:12px;line-height:1.5;margin:0}
-.section-no{color:var(--accent);font-size:.28em;vertical-align:top;margin-left:.08em;font-weight:500}
+.section-no{display:inline-block;color:var(--accent);font-size:.28em;vertical-align:top;margin-left:.08em;font-weight:500;transform:scaleX(1.16);transform-origin:left center}
 
 .filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:21px}
 .filter{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 13px;font-size:10px;cursor:pointer;transition:.2s}
@@ -149,7 +149,6 @@ section{padding:56px 0}
 .contact{background:#11120f;color:#fff;border-radius:29px;padding:43px;position:relative;overflow:hidden}
 .contact:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;background:var(--accent);right:-120px;top:-175px}
 .contact h2{position:relative;z-index:2;font-size:clamp(58px,9vw,128px);line-height:.8;letter-spacing:-.072em;font-weight:500;margin:0}
-.contact-no{color:var(--accent);font-size:.22em;vertical-align:top;margin-left:.08em;letter-spacing:0;font-weight:500}
 .actions{position:relative;z-index:2;display:flex;gap:8px;flex-wrap:wrap;margin-top:29px}
 .pill{border:1px solid #42443e;border-radius:999px;padding:11px 15px;font-size:10px}
 .pill.primary{background:var(--lime);color:#111;border-color:var(--lime)}
@@ -669,7 +668,7 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
   <section id="contact" class="reveal">
     <div class="contact">
       <div class="eyebrow">Open to full-time roles, freelance projects and international relocation</div>
-      <h2>Got a project? <span class="contact-no">05</span><br>Let’s talk.</h2>
+      <h2>Got a project?<br>Let’s talk.</h2>
       <div class="actions">
         <a class="pill primary" href="https://www.behance.net/oskuhallaART" target="_blank">Behance ↗</a>
         <a class="pill" href="tel:+79811255399">+7 981 125 53 99</a>
