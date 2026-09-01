@@ -17,26 +17,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Move Telegram card below hero
-        shell: python
+        shell: bash
         run: |
+          python - <<'PY'
           import re
           from pathlib import Path
 
           path = Path('index.html')
           html = path.read_text(encoding='utf-8')
 
-          # Remove the card from inside the right hero column.
           html, count = re.subn(
               r'\n\s*<div class="telegram-card-stage">.*?</a>\s*</div>\s*(?=<div class="meta">)',
-              '\n',
-              html,
-              count=1,
-              flags=re.S,
-          )
+              '\n', html, count=1, flags=re.S)
           if count != 1:
-              raise SystemExit('Could not locate the existing Telegram card block')
+              raise SystemExit('Could not locate existing Telegram card block')
 
-          # Put it after the complete hero, so the original two-column hero keeps its layout.
           block = '''
 
   <div class="telegram-card-stage">
@@ -51,13 +46,11 @@ jobs:
     </a>
   </div>
 '''
-
           marker = '  </div>\n\n  <div class="ticker"><div>'
           if marker not in html:
-              raise SystemExit('Could not find end of hero')
+              raise SystemExit('Could not find hero end marker')
           html = html.replace(marker, '  </div>' + block + '\n  <div class="ticker"><div>', 1)
 
-          # Add a final CSS override. This intentionally only affects the contact card.
           css = r'''
 
 /* Telegram card: below the main hero */
@@ -68,52 +61,30 @@ jobs:
   align-items:center;
   gap:clamp(28px,5vw,80px);
   width:min(1180px,94%);
-  margin:18px auto 72px;
-  padding:22px 42px 30px;
+  margin:8px auto 72px;
+  padding:18px 42px 30px;
   isolation:isolate;
 }
 .telegram-card-callout{
-  position:relative;
-  left:auto;
-  top:auto;
-  align-self:center;
+  position:relative;left:auto;top:auto;align-self:center;
   font:500 clamp(34px,4vw,58px)/.88 "Space Grotesk",sans-serif;
-  letter-spacing:-.065em;
-  transform:rotate(-4deg);
-  color:var(--ink);
-  z-index:4;
+  letter-spacing:-.065em;transform:rotate(-4deg);color:var(--ink);z-index:4;
 }
 .telegram-card-callout strong{color:var(--accent);font-weight:500}
-.telegram-card-arrow{
-  position:absolute;
-  left:58%;
-  top:74%;
-  width:clamp(120px,12vw,170px);
-  height:auto;
-  overflow:visible;
-}
+.telegram-card-arrow{position:absolute;left:58%;top:74%;width:clamp(120px,12vw,170px);height:auto;overflow:visible}
 .telegram-card-link{
-  position:relative;
-  z-index:2;
-  display:block;
-  width:min(100%,760px);
-  margin:0;
-  transform:rotate(-2.2deg);
-  transform-origin:center;
-  transition:transform .38s cubic-bezier(.2,.8,.2,1),filter .38s;
-  will-change:transform;
+  position:relative;z-index:2;display:block;width:min(100%,760px);margin:0;
+  transform:rotate(-2.2deg);transform-origin:center;
+  transition:transform .38s cubic-bezier(.2,.8,.2,1),filter .38s;will-change:transform;
 }
 .telegram-card-link img{
-  display:block;
-  width:100%;
-  height:auto;
-  border-radius:30px;
+  display:block;width:100%;height:auto;border-radius:30px;
   filter:drop-shadow(0 26px 26px rgba(17,18,15,.18)) drop-shadow(0 7px 8px rgba(17,18,15,.09));
 }
 .telegram-card-link:hover{transform:translateY(-7px) rotate(-.8deg) scale(1.035)}
 .telegram-card-link:hover img{filter:drop-shadow(0 34px 34px rgba(17,18,15,.22)) drop-shadow(0 10px 10px rgba(17,18,15,.11))}
 @media(max-width:900px){
-  .telegram-card-stage{grid-template-columns:1fr;width:min(760px,96%);gap:28px;margin:6px auto 58px;padding:12px 14px 24px}
+  .telegram-card-stage{grid-template-columns:1fr;width:min(760px,96%);gap:28px;margin:0 auto 58px;padding:12px 14px 24px}
   .telegram-card-callout{width:max-content;max-width:80%;font-size:40px;transform:rotate(-3deg)}
   .telegram-card-arrow{left:64%;top:70%;width:120px}
   .telegram-card-link{width:92%;margin:0 auto;transform:rotate(-1.7deg)}
@@ -126,8 +97,8 @@ jobs:
 }
 '''
           html = html.replace('</style>', css + '\n</style>', 1)
-
           path.write_text(html, encoding='utf-8')
+          PY
 
       - name: Commit layout fix
         shell: bash
