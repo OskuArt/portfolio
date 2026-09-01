@@ -284,6 +284,50 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
   .contact{padding:30px 22px}
   footer{flex-direction:column;gap:7px}
 }
+
+/* Telegram card: below the main hero */
+.telegram-card-stage{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(220px,.55fr) minmax(0,1.45fr);
+  align-items:center;
+  gap:clamp(28px,5vw,80px);
+  width:min(1180px,94%);
+  margin:8px auto 72px;
+  padding:18px 42px 30px;
+  isolation:isolate;
+}
+.telegram-card-callout{
+  position:relative;left:auto;top:auto;align-self:center;
+  font:500 clamp(34px,4vw,58px)/.88 "Space Grotesk",sans-serif;
+  letter-spacing:-.065em;transform:rotate(-4deg);color:var(--ink);z-index:4;
+}
+.telegram-card-callout strong{color:var(--accent);font-weight:500}
+.telegram-card-arrow{position:absolute;left:58%;top:74%;width:clamp(120px,12vw,170px);height:auto;overflow:visible}
+.telegram-card-link{
+  position:relative;z-index:2;display:block;width:min(100%,760px);margin:0;
+  transform:rotate(-2.2deg);transform-origin:center;
+  transition:transform .38s cubic-bezier(.2,.8,.2,1),filter .38s;will-change:transform;
+}
+.telegram-card-link img{
+  display:block;width:100%;height:auto;border-radius:30px;
+  filter:drop-shadow(0 26px 26px rgba(17,18,15,.18)) drop-shadow(0 7px 8px rgba(17,18,15,.09));
+}
+.telegram-card-link:hover{transform:translateY(-7px) rotate(-.8deg) scale(1.035)}
+.telegram-card-link:hover img{filter:drop-shadow(0 34px 34px rgba(17,18,15,.22)) drop-shadow(0 10px 10px rgba(17,18,15,.11))}
+@media(max-width:900px){
+  .telegram-card-stage{grid-template-columns:1fr;width:min(760px,96%);gap:28px;margin:0 auto 58px;padding:12px 14px 24px}
+  .telegram-card-callout{width:max-content;max-width:80%;font-size:40px;transform:rotate(-3deg)}
+  .telegram-card-arrow{left:64%;top:70%;width:120px}
+  .telegram-card-link{width:92%;margin:0 auto;transform:rotate(-1.7deg)}
+}
+@media(max-width:620px){
+  .telegram-card-stage{margin-top:0;margin-bottom:44px;padding-top:2px}
+  .telegram-card-callout{font-size:30px;max-width:88%}
+  .telegram-card-arrow{left:60%;top:72%;width:92px}
+  .telegram-card-link{width:96%}
+}
+
 </style>
 </head>
 <body>
@@ -310,19 +354,7 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
     </div>
     <div>
       <p class="hero-copy">I turn ideas into visual systems people can recognize, remember and use. Branding, packaging, e-commerce, illustration and digital design, from the first sketch to production-ready files.</p>
-
-    <div class="telegram-card-stage">
-      <div class="telegram-card-callout">Click to<br><strong>text me!</strong>
-        <svg class="telegram-card-arrow" viewBox="0 0 142 116" aria-hidden="true">
-          <path d="M8 10 C30 28 30 72 116 84"/>
-          <path d="M98 66 L118 84 L96 99"/>
-        </svg>
-      </div>
-      <a class="telegram-card-link" href="https://t.me/oskuarttt" target="_blank" rel="noreferrer" aria-label="Message me on Telegram">
-        <img src="assets/contact-card.webp" alt="Kseniia Smirnova / Osku Halla graphic designer card">
-      </a>
-    </div>
-      <div class="meta">
+<div class="meta">
         <div class="m"><small>Design experience</small><div>3+ years</div></div>
         <div class="m"><small>Based in</small><div>Saint Petersburg</div></div>
         <div class="m"><small>Relocation</small><div>Ready internationally</div></div>
@@ -330,6 +362,19 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
       </div>
       <div class="route"></div>
     </div>
+  </div>
+
+
+  <div class="telegram-card-stage">
+    <div class="telegram-card-callout">Click to<br><strong>text me!</strong>
+      <svg class="telegram-card-arrow" viewBox="0 0 170 115" aria-hidden="true">
+        <path d="M8 14 C48 18 74 78 144 76"/>
+        <path d="M126 59 L146 76 L126 94"/>
+      </svg>
+    </div>
+    <a class="telegram-card-link" href="https://t.me/oskuarttt" target="_blank" rel="noreferrer" aria-label="Message me on Telegram">
+      <img src="https://raw.githubusercontent.com/OskuArt/portfolio/main/assets/contact-card.webp?v=20260901" alt="Kseniia Smirnova / Osku Halla graphic designer card">
+    </a>
   </div>
 
   <div class="ticker"><div>
