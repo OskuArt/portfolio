@@ -1,110 +1,16 @@
 name: Reposition Telegram card
-
 on:
   push:
     branches: [main]
-    paths:
-      - ".github/workflows/reposition-telegram-card.yml"
-
+    paths: ['.github/workflows/reposition-telegram-card.yml']
 permissions:
   contents: write
-
 jobs:
   reposition:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Move Telegram card below hero
-        shell: bash
-        run: |
-          python - <<'PY'
-          import re
-          from pathlib import Path
-
-          path = Path('index.html')
-          html = path.read_text(encoding='utf-8')
-
-          html, count = re.subn(
-              r'\n\s*<div class="telegram-card-stage">.*?</a>\s*</div>\s*(?=<div class="meta">)',
-              '\n', html, count=1, flags=re.S)
-          if count != 1:
-              raise SystemExit('Could not locate existing Telegram card block')
-
-          block = '''
-
-  <div class="telegram-card-stage">
-    <div class="telegram-card-callout">Click to<br><strong>text me!</strong>
-      <svg class="telegram-card-arrow" viewBox="0 0 170 115" aria-hidden="true">
-        <path d="M8 14 C48 18 74 78 144 76"/>
-        <path d="M126 59 L146 76 L126 94"/>
-      </svg>
-    </div>
-    <a class="telegram-card-link" href="https://t.me/oskuarttt" target="_blank" rel="noreferrer" aria-label="Message me on Telegram">
-      <img src="https://raw.githubusercontent.com/OskuArt/portfolio/main/assets/contact-card.webp?v=20260901" alt="Kseniia Smirnova / Osku Halla graphic designer card">
-    </a>
-  </div>
-'''
-          marker = '  </div>\n\n  <div class="ticker"><div>'
-          if marker not in html:
-              raise SystemExit('Could not find hero end marker')
-          html = html.replace(marker, '  </div>' + block + '\n  <div class="ticker"><div>', 1)
-
-          css = r'''
-
-/* Telegram card: below the main hero */
-.telegram-card-stage{
-  position:relative;
-  display:grid;
-  grid-template-columns:minmax(220px,.55fr) minmax(0,1.45fr);
-  align-items:center;
-  gap:clamp(28px,5vw,80px);
-  width:min(1180px,94%);
-  margin:8px auto 72px;
-  padding:18px 42px 30px;
-  isolation:isolate;
-}
-.telegram-card-callout{
-  position:relative;left:auto;top:auto;align-self:center;
-  font:500 clamp(34px,4vw,58px)/.88 "Space Grotesk",sans-serif;
-  letter-spacing:-.065em;transform:rotate(-4deg);color:var(--ink);z-index:4;
-}
-.telegram-card-callout strong{color:var(--accent);font-weight:500}
-.telegram-card-arrow{position:absolute;left:58%;top:74%;width:clamp(120px,12vw,170px);height:auto;overflow:visible}
-.telegram-card-link{
-  position:relative;z-index:2;display:block;width:min(100%,760px);margin:0;
-  transform:rotate(-2.2deg);transform-origin:center;
-  transition:transform .38s cubic-bezier(.2,.8,.2,1),filter .38s;will-change:transform;
-}
-.telegram-card-link img{
-  display:block;width:100%;height:auto;border-radius:30px;
-  filter:drop-shadow(0 26px 26px rgba(17,18,15,.18)) drop-shadow(0 7px 8px rgba(17,18,15,.09));
-}
-.telegram-card-link:hover{transform:translateY(-7px) rotate(-.8deg) scale(1.035)}
-.telegram-card-link:hover img{filter:drop-shadow(0 34px 34px rgba(17,18,15,.22)) drop-shadow(0 10px 10px rgba(17,18,15,.11))}
-@media(max-width:900px){
-  .telegram-card-stage{grid-template-columns:1fr;width:min(760px,96%);gap:28px;margin:0 auto 58px;padding:12px 14px 24px}
-  .telegram-card-callout{width:max-content;max-width:80%;font-size:40px;transform:rotate(-3deg)}
-  .telegram-card-arrow{left:64%;top:70%;width:120px}
-  .telegram-card-link{width:92%;margin:0 auto;transform:rotate(-1.7deg)}
-}
-@media(max-width:620px){
-  .telegram-card-stage{margin-top:0;margin-bottom:44px;padding-top:2px}
-  .telegram-card-callout{font-size:30px;max-width:88%}
-  .telegram-card-arrow{left:60%;top:72%;width:92px}
-  .telegram-card-link{width:96%}
-}
-'''
-          html = html.replace('</style>', css + '\n</style>', 1)
-          path.write_text(html, encoding='utf-8')
-          PY
-
-      - name: Commit layout fix
-        shell: bash
-        run: |
-          git config user.name "chatgpt[bot]"
-          git config user.email "chatgpt[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "Move Telegram card below hero and fix image" || exit 0
-          git push
+      - uses: actions/checkout@v4
+      - name: Update layout
+        run: echo 'CmltcG9ydCByZQpmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKCnBhdGggPSBQYXRoKCJpbmRleC5odG1sIikKaHRtbCA9IHBhdGgucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCgpodG1sLCBjb3VudCA9IHJlLnN1Ym4oCiAgICByJ1xuXHMqPGRpdiBjbGFzcz0idGVsZWdyYW0tY2FyZC1zdGFnZSI+Lio/PC9hPlxzKjwvZGl2PlxzKig/PTxkaXYgY2xhc3M9Im1ldGEiPiknLAogICAgJ1xuJywgaHRtbCwgY291bnQ9MSwgZmxhZ3M9cmUuUwopCmlmIGNvdW50ICE9IDE6CiAgICByYWlzZSBTeXN0ZW1FeGl0KCJDb3VsZCBub3QgbG9jYXRlIGV4aXN0aW5nIFRlbGVncmFtIGNhcmQgYmxvY2siKQoKYmxvY2sgPSAnJycKICA8ZGl2IGNsYXNzPSJ0ZWxlZ3JhbS1jYXJkLXN0YWdlIj4KICAgIDxkaXYgY2xhc3M9InRlbGVncmFtLWNhcmQtY2FsbG91dCI+Q2xpY2sgdG88YnI+PHN0cm9uZz50ZXh0IG1lITwvc3Ryb25nPgogICAgICA8c3ZnIGNsYXNzPSJ0ZWxlZ3JhbS1jYXJkLWFycm93IiB2aWV3Qm94PSIwIDAgMTcwIDExNSIgYXJpYS1oaWRkZW49InRydWUiPgogICAgICAgIDxwYXRoIGQ9Ik04IDE0IEM0OCAxOCA3NCA3OCAxNDQgNzYiLz4KICAgICAgICA8cGF0aCBkPSJNMTI2IDU5IEwxNDYgNzYgTDEyNiA5NCIvPgogICAgICA8L3N2Zz4KICAgIDwvZGl2PgogICAgPGEgY2xhc3M9InRlbGVncmFtLWNhcmQtbGluayIgaHJlZj0iaHR0cHM6Ly90Lm1lL29za3VhcnR0dCIgdGFyZ2V0PSJfYmxhbmsiIHJlbD0ibm9yZWZlcnJlciIgYXJpYS1sYWJlbD0iTWVzc2FnZSBtZSBvbiBUZWxlZ3JhbSI+CiAgICAgIDxpbWcgc3JjPSJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vT3NrdUFydC9wb3J0Zm9saW8vbWFpbi9hc3NldHMvY29udGFjdC1jYXJkLndlYnA/dj0yMDI2MDkwMSIgYWx0PSJLc2VuaWlhIFNtaXJub3ZhIC8gT3NrdSBIYWxsYSBncmFwaGljIGRlc2lnbmVyIGNhcmQiPgogICAgPC9hPgogIDwvZGl2PgonJycKCm1hcmtlciA9ICcgIDwvZGl2PlxuXG4gIDxkaXYgY2xhc3M9InRpY2tlciI+PGRpdj4nCmlmIG1hcmtlciBub3QgaW4gaHRtbDoKICAgIHJhaXNlIFN5c3RlbUV4aXQoIkNvdWxkIG5vdCBmaW5kIGhlcm8gZW5kIG1hcmtlciIpCmh0bWwgPSBodG1sLnJlcGxhY2UobWFya2VyLCAnICA8L2Rpdj5cblxuJyArIGJsb2NrICsgJ1xuICA8ZGl2IGNsYXNzPSJ0aWNrZXIiPjxkaXY+JywgMSkKCmNzcyA9IHInJycKLyogVGVsZWdyYW0gY2FyZDogYmVsb3cgdGhlIG1haW4gaGVybyAqLwoudGVsZWdyYW0tY2FyZC1zdGFnZXsKICBwb3NpdGlvbjpyZWxhdGl2ZTsKICBkaXNwbGF5OmdyaWQ7CiAgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOm1pbm1heCgyMjBweCwuNTVmcikgbWlubWF4KDAsMS40NWZyKTsKICBhbGlnbi1pdGVtczpjZW50ZXI7CiAgZ2FwOmNsYW1wKDI4cHgsNXZ3LDgwcHgpOwogIHdpZHRoOm1pbigxMTgwcHgsOTQlKTsKICBtYXJnaW46OHB4IGF1dG8gNzJweDsKICBwYWRkaW5nOjE4cHggNDJweCAzMHB4OwogIGlzb2xhdGlvbjppc29sYXRlOwp9Ci50ZWxlZ3JhbS1jYXJkLWNhbGxvdXR7CiAgcG9zaXRpb246cmVsYXRpdmU7bGVmdDphdXRvO3RvcDphdXRvO2FsaWduLXNlbGY6Y2VudGVyOwogIGZvbnQ6NTAwIGNsYW1wKDM0cHgsNHZ3LDU4cHgpLy44OCAiU3BhY2UgR3JvdGVzayIsc2Fucy1zZXJpZjsKICBsZXR0ZXItc3BhY2luZzotLjA2NWVtO3RyYW5zZm9ybTpyb3RhdGUoLTRkZWcpO2NvbG9yOnZhcigtLWluayk7ei1pbmRleDo0Owp9Ci50ZWxlZ3JhbS1jYXJkLWNhbGxvdXQgc3Ryb25ne2NvbG9yOnZhcigtLWFjY2VudCk7Zm9udC13ZWlnaHQ6NTAwfQoudGVsZWdyYW0tY2FyZC1hcnJvd3twb3NpdGlvbjphYnNvbHV0ZTtsZWZ0OjU4JTt0b3A6NzQlO3dpZHRoOmNsYW1wKDEyMHB4LDEydncsMTcwcHgpO2hlaWdodDphdXRvO292ZXJmbG93OnZpc2libGV9Ci50ZWxlZ3JhbS1jYXJkLWxpbmt7CiAgcG9zaXRpb246cmVsYXRpdmU7ei1pbmRleDoyO2Rpc3BsYXk6YmxvY2s7d2lkdGg6bWluKDEwMCUsNzYwcHgpO21hcmdpbjowOwogIHRyYW5zZm9ybTpyb3RhdGUoLTIuMmRlZyk7dHJhbnNmb3JtLW9yaWdpbjpjZW50ZXI7CiAgdHJhbnNpdGlvbjp0cmFuc2Zvcm0gLjM4cyBjdWJpYy1iZXppZXIoLjIsLjgsLjIsMSksZmlsdGVyIC4zOHM7d2lsbC1jaGFuZ2U6dHJhbnNmb3JtOwp9Ci50ZWxlZ3JhbS1jYXJkLWxpbmsgaW1newogIGRpc3BsYXk6YmxvY2s7d2lkdGg6MTAwJTtoZWlnaHQ6YXV0bztib3JkZXItcmFkaXVzOjMwcHg7CiAgZmlsdGVyOmRyb3Atc2hhZG93KDAgMjZweCAyNnB4IHJnYmEoMTcsMTgsMTUsLjE4KSkgZHJvcC1zaGFkb3coMCA3cHggOHB4IHJnYmEoMTcsMTgsMTUsLjA5KSk7Cn0KLnRlbGVncmFtLWNhcmQtbGluazpob3Zlcnt0cmFuc2Zvcm06dHJhbnNsYXRlWSgtN3B4KSByb3RhdGUoLS44ZGVnKSBzY2FsZSgxLjAzNSl9Ci50ZWxlZ3JhbS1jYXJkLWxpbms6aG92ZXIgaW1ne2ZpbHRlcjpkcm9wLXNoYWRvdygwIDM0cHggMzRweCByZ2JhKDE3LDE4LDE1LC4yMikpIGRyb3Atc2hhZG93KDAgMTBweCAxMHB4IHJnYmEoMTcsMTgsMTUsLjExKSl9CkBtZWRpYShtYXgtd2lkdGg6OTAwcHgpewogIC50ZWxlZ3JhbS1jYXJkLXN0YWdle2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnI7d2lkdGg6bWluKDc2MHB4LDk2JSk7Z2FwOjI4cHg7bWFyZ2luOjAgYXV0byA1OHB4O3BhZGRpbmc6MTJweCAxNHB4IDI0cHh9CiAgLnRlbGVncmFtLWNhcmQtY2FsbG91dHt3aWR0aDptYXgtY29udGVudDttYXgtd2lkdGg6ODAlO2ZvbnQtc2l6ZTo0MHB4O3RyYW5zZm9ybTpyb3RhdGUoLTNkZWcpfQogIC50ZWxlZ3JhbS1jYXJkLWFycm93e2xlZnQ6NjQlO3RvcDo3MCU7d2lkdGg6MTIwcHh9CiAgLnRlbGVncmFtLWNhcmQtbGlua3t3aWR0aDo5MiU7bWFyZ2luOjAgYXV0bzt0cmFuc2Zvcm06cm90YXRlKC0xLjdkZWcpfQp9CkBtZWRpYShtYXgtd2lkdGg6NjIwcHgpewogIC50ZWxlZ3JhbS1jYXJkLXN0YWdle21hcmdpbi10b3A6MDttYXJnaW4tYm90dG9tOjQ0cHg7cGFkZGluZy10b3A6MnB4fQogIC50ZWxlZ3JhbS1jYXJkLWNhbGxvdXR7Zm9udC1zaXplOjMwcHg7bWF4LXdpZHRoOjg4JX0KICAudGVsZWdyYW0tY2FyZC1hcnJvd3tsZWZ0OjYwJTt0b3A6NzIlO3dpZHRoOjkycHh9CiAgLnRlbGVncmFtLWNhcmQtbGlua3t3aWR0aDo5NiV9Cn0KJycnCmh0bWwgPSBodG1sLnJlcGxhY2UoIjwvc3R5bGU+IiwgY3NzICsgIlxuPC9zdHlsZT4iLCAxKQpwYXRoLndyaXRlX3RleHQoaHRtbCwgZW5jb2Rpbmc9InV0Zi04IikK' | base64 -d > /tmp/fix.py && python /tmp/fix.py
+      - name: Commit
+        run: git config user.name 'chatgpt[bot]' && git config user.email 'chatgpt[bot]@users.noreply.github.com' && git add index.html && git commit -m 'Move Telegram card below hero and fix image' && git push
