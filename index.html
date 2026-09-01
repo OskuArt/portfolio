@@ -66,6 +66,92 @@ h1 .ghost{color:transparent;-webkit-text-stroke:1.2px var(--ink)}
 .route{height:21px;margin-top:25px;border-top:1px dashed rgba(242,138,91,.65);position:relative}
 .route:after{content:"✦";position:absolute;right:18%;top:-13px;width:25px;height:25px;border-radius:50%;border:1px solid var(--accent);background:var(--bg);display:grid;place-items:center;color:var(--accent);font-size:9px}
 
+
+/* Telegram contact card */
+.telegram-card-stage{
+  position:relative;
+  margin:34px 0 6px;
+  padding:34px 8px 18px 92px;
+  isolation:isolate;
+}
+.telegram-card-link{
+  position:relative;
+  z-index:2;
+  display:block;
+  width:min(100%,560px);
+  margin-left:auto;
+  transform:rotate(-3deg);
+  transform-origin:center;
+  transition:transform .38s cubic-bezier(.2,.8,.2,1),filter .38s;
+  will-change:transform;
+}
+.telegram-card-link img{
+  width:100%;
+  height:auto;
+  border-radius:28px;
+  filter:drop-shadow(0 24px 24px rgba(17,18,15,.18)) drop-shadow(0 6px 7px rgba(17,18,15,.10));
+  transition:filter .38s cubic-bezier(.2,.8,.2,1);
+}
+.telegram-card-link:after{
+  content:"";
+  position:absolute;
+  inset:2.5% 2.5% 4%;
+  border-radius:24px;
+  background:linear-gradient(115deg,rgba(255,255,255,.30),transparent 24%,transparent 72%,rgba(255,255,255,.13));
+  opacity:.52;
+  pointer-events:none;
+  mix-blend-mode:screen;
+}
+.telegram-card-link:hover{
+  transform:translateY(-8px) rotate(-1.2deg) scale(1.045);
+}
+.telegram-card-link:hover img{
+  filter:drop-shadow(0 34px 34px rgba(17,18,15,.22)) drop-shadow(0 10px 10px rgba(17,18,15,.11));
+}
+.telegram-card-callout{
+  position:absolute;
+  z-index:4;
+  left:0;
+  top:6px;
+  pointer-events:none;
+  font:500 clamp(30px,3.05vw,45px)/.86 "Space Grotesk",sans-serif;
+  letter-spacing:-.06em;
+  transform:rotate(-5deg);
+  color:var(--ink);
+}
+.telegram-card-callout strong{
+  color:var(--accent);
+  font-weight:500;
+}
+.telegram-card-arrow{
+  position:absolute;
+  left:26px;
+  top:82px;
+  width:142px;
+  height:116px;
+  overflow:visible;
+}
+.telegram-card-arrow path{
+  fill:none;
+  stroke:var(--accent);
+  stroke-width:3.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+@media(max-width:900px){
+  .telegram-card-stage{max-width:690px;margin:28px auto 0;padding-left:96px}
+}
+@media(max-width:620px){
+  .telegram-card-stage{margin-top:24px;padding:76px 0 12px}
+  .telegram-card-callout{left:8px;top:2px;font-size:29px;transform:rotate(-3deg)}
+  .telegram-card-arrow{left:102px;top:29px;width:96px;height:74px}
+  .telegram-card-link{width:94%;margin-inline:auto;transform:rotate(-2deg)}
+  .telegram-card-link:hover{transform:translateY(-5px) rotate(-.7deg) scale(1.025)}
+}
+@media(prefers-reduced-motion:reduce){
+  .telegram-card-link,.telegram-card-link img{transition:none}
+}
+
 .ticker{overflow:hidden;border-block:1px solid var(--line);padding:11px 0}
 .ticker div{width:max-content;display:flex;gap:34px;text-transform:uppercase;font-size:10px;letter-spacing:.08em;animation:move 24s linear infinite}
 .ticker span:after{content:"✦";color:var(--accent);margin-left:34px}
@@ -224,6 +310,18 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
     </div>
     <div>
       <p class="hero-copy">I turn ideas into visual systems people can recognize, remember and use. Branding, packaging, e-commerce, illustration and digital design, from the first sketch to production-ready files.</p>
+
+    <div class="telegram-card-stage">
+      <div class="telegram-card-callout">Click to<br><strong>text me!</strong>
+        <svg class="telegram-card-arrow" viewBox="0 0 142 116" aria-hidden="true">
+          <path d="M8 10 C30 28 30 72 116 84"/>
+          <path d="M98 66 L118 84 L96 99"/>
+        </svg>
+      </div>
+      <a class="telegram-card-link" href="https://t.me/oskuarttt" target="_blank" rel="noreferrer" aria-label="Message me on Telegram">
+        <img src="assets/contact-card.webp" alt="Kseniia Smirnova / Osku Halla graphic designer card">
+      </a>
+    </div>
       <div class="meta">
         <div class="m"><small>Design experience</small><div>3+ years</div></div>
         <div class="m"><small>Based in</small><div>Saint Petersburg</div></div>
