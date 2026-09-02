@@ -464,6 +464,97 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
 @media(max-width:720px){.private{grid-template-columns:1fr!important;gap:14px!important}.pc{min-height:220px!important}.pc__content,.pc--smeshariki .pc__content{max-width:64%!important}.pc--caseplace .pc__logo{width:min(38%,250px)!important;opacity:.95!important;right:7%!important;top:50%!important;bottom:auto!important;transform:translateY(-50%) scale(1)!important}.pc--caseplace:hover .pc__logo{transform:translateY(-50%) scale(1.06)!important}.pc--smeshariki .pc__art{width:min(27%,180px)!important;right:7%!important;bottom:0!important;opacity:1!important}}
 @media(max-width:520px){.pc{min-height:230px!important;padding:20px 18px 62px!important}.pc__content,.pc--smeshariki .pc__content{max-width:100%!important}.pc h3{font-size:32px!important}.pc--caseplace .pc__logo{width:42%!important;right:70px!important;top:auto!important;bottom:20px!important;transform:none!important;opacity:.30!important}.pc--caseplace:hover .pc__logo{transform:scale(1.05)!important}.pc--smeshariki .pc__art{width:145px!important;right:10px!important;bottom:0!important;opacity:.88!important}}
 
+
+/* Mobile-only composition refinement. Desktop intentionally untouched. */
+@media(max-width:620px){
+  .telegram-card-stage{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:6px auto 48px!important;
+    padding:8px 8px 18px!important;
+    overflow:visible!important;
+  }
+  .telegram-card-callout{
+    position:relative!important;
+    left:8px!important;
+    top:auto!important;
+    width:62%!important;
+    max-width:250px!important;
+    margin:0 0 8px!important;
+    font-size:31px!important;
+    line-height:.88!important;
+    transform:rotate(-3deg)!important;
+    z-index:4!important;
+  }
+  .telegram-card-arrow{
+    position:absolute!important;
+    left:auto!important;
+    right:25%!important;
+    top:92px!important;
+    width:96px!important;
+    height:auto!important;
+    transform:rotate(8deg)!important;
+    z-index:5!important;
+    overflow:visible!important;
+  }
+  .telegram-card-link{
+    width:78%!important;
+    margin:28px 3% 0 auto!important;
+    border-radius:28px!important;
+    overflow:hidden!important;
+    transform:none!important;
+    box-shadow:0 14px 24px rgba(17,18,15,.12),0 4px 8px rgba(17,18,15,.06)!important;
+    transition:none!important;
+  }
+  .telegram-card-link img{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    border-radius:26px!important;
+    transform:none!important;
+    filter:none!important;
+  }
+  .telegram-card-link:hover{transform:none!important}
+  .private{grid-template-columns:1fr!important;gap:14px!important}
+  .pc{
+    min-height:252px!important;
+    padding:22px 18px 86px!important;
+    border-radius:26px!important;
+    overflow:hidden!important;
+    transform:none!important;
+  }
+  .pc:hover{transform:none!important}
+  .pc__content,.pc--smeshariki .pc__content{max-width:100%!important}
+  .pc small{margin-bottom:30px!important;font-size:9px!important}
+  .pc h3{font-size:34px!important;line-height:.94!important;margin-bottom:10px!important}
+  .pc p{font-size:12px!important;line-height:1.45!important;max-width:100%!important}
+  .pc b{right:16px!important;bottom:16px!important;width:48px!important;height:48px!important}
+  .pc--caseplace .pc__logo{
+    left:18px!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:22px!important;
+    width:160px!important;
+    max-width:44%!important;
+    opacity:.42!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  .pc--caseplace:hover .pc__logo{transform:none!important}
+  .pc--smeshariki .pc__art{
+    right:28px!important;
+    bottom:-24px!important;
+    width:118px!important;
+    max-width:none!important;
+    opacity:.96!important;
+    transform:none!important;
+    transition:none!important;
+    filter:drop-shadow(0 7px 10px rgba(17,18,15,.08))!important;
+  }
+  .pc--smeshariki:hover .pc__art{transform:none!important}
+}
+
 </style>
 </head>
 <body>
