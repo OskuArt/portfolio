@@ -17,36 +17,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Add courses under college
-        shell: python
+        shell: bash
         run: |
+          python - <<'PY'
           from pathlib import Path
-
           p = Path("index.html")
           s = p.read_text(encoding="utf-8")
-
-          old = '''    <div class="edu">
-      <div><h3>Graphic Design</h3><small>College · 2022–2024</small></div>
-      <p>Focused on print production, prepress, layout, branding and digital design, while continuing to develop illustration as a parallel professional skill.</p>
-    </div>'''
-
-          new = '''    <div class="edu">
-      <div><h3>Graphic Design</h3><small>College · 2022–2024</small></div>
-      <p>Focused on print production, prepress, layout, branding and digital design, while continuing to develop illustration as a parallel professional skill.</p>
-    </div>
-    <div class="edu">
-      <div><h3>Creativo</h3><small>Course · Apr 2026</small></div>
-      <p>Marketplace Infographics</p>
-    </div>
-    <div class="edu">
-      <div><h3>NeuroGuide</h3><small>Course · Apr 2026</small></div>
-      <p>NeuroGuide 2.0</p>
-    </div>'''
-
+          old = '    <div class="edu">\n      <div><h3>Graphic Design</h3><small>College · 2022–2024</small></div>\n      <p>Focused on print production, prepress, layout, branding and digital design, while continuing to develop illustration as a parallel professional skill.</p>\n    </div>'
+          new = old + '\n    <div class="edu">\n      <div><h3>Creativo</h3><small>Course · Apr 2026</small></div>\n      <p>Marketplace Infographics</p>\n    </div>\n    <div class="edu">\n      <div><h3>NeuroGuide</h3><small>Course · Apr 2026</small></div>\n      <p>NeuroGuide 2.0</p>\n    </div>'
           if old not in s:
               raise SystemExit("Education block not found; index.html was not changed")
-
-          s = s.replace(old, new, 1)
-          p.write_text(s, encoding="utf-8")
+          p.write_text(s.replace(old, new, 1), encoding="utf-8")
+          PY
 
       - name: Commit changes and remove temporary workflow
         shell: bash
