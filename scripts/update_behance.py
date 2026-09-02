@@ -50,6 +50,7 @@ SESSION.headers.update({
 CATEGORY_META = {
     "branding": "Brand identity · Behance project",
     "packaging": "Packaging · Behance project",
+    "ecommerce": "E-commerce · Behance project",
     "illustration": "Illustration · Behance project",
     "digital": "Digital design · Behance project",
     "editorial": "Editorial / print · Behance project",
@@ -160,6 +161,7 @@ def extract_reader_title(markdown: str, fallback_url: str) -> str:
 
     title = re.sub(r"\s*::\s*Behance\s*$", "", title, flags=re.I)
     title = re.sub(r"\s+on Behance\s*$", "", title, flags=re.I)
+    title = re.sub(r"\s*[-–—|]\s*Osku\s+Halla\s*$", "", title, flags=re.I)
 
     if not title:
         title = fallback_url.rstrip("/").split("/")[-1].replace("-", " ")
@@ -210,6 +212,13 @@ def infer_category(title: str, body: str) -> str:
     text = f"{title} {body[:7000]}".lower()
 
     groups = [
+        ("ecommerce", (
+            "e-commerce", "ecommerce", "e commerce", "meta ads", "meta advertising",
+            "creative banners", "banners for meta", "ad creative", "ad creatives",
+            "advertising creative", "advertising creatives", "performance marketing",
+            "marketplace", "product card", "amazon listing", "wildberries", "ozon",
+            "wb card", "e-com", "shopping ads",
+        )),
         ("packaging", (
             "packaging", "package", "label", "bottle", "perfume", "parfum",
             "cosmetic", "cider", "nuts", "box", "tube", "jar",
