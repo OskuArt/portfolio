@@ -18,71 +18,13 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
-
+          import re, base64
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-
-          new_section = '''  <section id="experience" class="reveal">
-    <div class="head"><h2>Experience <span class="section-no">03</span></h2><p>3+ years in graphic design across in-house and freelance roles. Figure skating coaching is a parallel practice.</p></div>
-    <div class="row">
-      <div><div class="role">Graphic Designer</div><div class="company">Laika Design Studio</div><div class="date">2021 — 2022</div></div>
-      <div class="company">In-house · Junior level</div>
-      <ul>
-        <li>Designed exhibition stands for cultural and public projects</li>
-        <li>Created visual materials for the Night of Museums events in Saint Petersburg and the Leningrad Region</li>
-        <li>Prepared magazine layouts and print-ready files</li>
-        <li>Developed exhibition graphics and supporting materials for projects across Saint Petersburg and the Leningrad Region</li>
-        <li>Designed interactive materials for exhibitions and events</li>
-        <li>Reviewed print proofs and production test prints before final output</li>
-      </ul>
-    </div>
-    <div class="row">
-      <div><div class="role">Graphic Designer</div><div class="company">Freelance</div><div class="date">March 2023 — Present</div></div>
-      <div class="company">Independent projects</div>
-      <ul>
-        <li>Brand identity from concept to final system</li>
-        <li>Commercial illustration</li>
-        <li>Print design and prepress</li>
-        <li>Infographics and e-commerce visuals</li>
-        <li>Advertising and social media design for businesses</li>
-      </ul>
-    </div>
-    <div class="row">
-      <div><div class="role">Graphic Designer</div><div class="company">Case Place</div><div class="date">July 2023 — August 2026 · 3 years 2 months</div></div>
-      <div class="company">In-house · Middle level</div>
-      <ul>
-        <li>Managed a collection of original prints and developed new visual directions</li>
-        <li>Created mockups from scratch for multiple product formats</li>
-        <li>Worked on licensed products: campaign output grew 5×, and products with my designs reached 1M views on social media</li>
-        <li>Designed e-commerce creatives and worked with advertising performance metrics</li>
-        <li>Created presentations, packaging and production-ready print layouts</li>
-        <li>Trained up to two colleagues at a time and prepared internal learning materials</li>
-        <li>Developed corporate identity materials, including redesigns, merchandise and print assets</li>
-      </ul>
-    </div>
-    <div class="row">
-      <div><div class="role">Figure Skating Coach</div><div class="company">Freelance</div><div class="date">January 2021 — Present</div></div>
-      <div class="company">Parallel practice · Children & adults</div>
-      <ul>
-        <li>Coach both children and adults, from beginners to advanced skaters</li>
-        <li>Teach skating technique, spins and jumps</li>
-        <li>Create routines and work on general physical training and flexibility</li>
-      </ul>
-    </div>
-  </section>
-
-'''
-
-          s, n = re.subn(
-              r'  <section id="experience" class="reveal">[\s\S]*?(?=  <section id="skills" class="reveal">)',
-              new_section,
-              s,
-              count=1,
-          )
+          new_section = base64.b64decode('ICA8c2VjdGlvbiBpZD0iZXhwZXJpZW5jZSIgY2xhc3M9InJldmVhbCI+CiAgICA8ZGl2IGNsYXNzPSJoZWFkIj48aDI+RXhwZXJpZW5jZSA8c3BhbiBjbGFzcz0ic2VjdGlvbi1ubyI+MDM8L3NwYW4+PC9oMj48cD4zKyB5ZWFycyBpbiBncmFwaGljIGRlc2lnbiBhY3Jvc3MgaW4taG91c2UgYW5kIGZyZWVsYW5jZSByb2xlcy4gRmlndXJlIHNrYXRpbmcgY29hY2hpbmcgaXMgYSBwYXJhbGxlbCBwcmFjdGljZS48L3A+PC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJyb3ciPgogICAgICA8ZGl2PjxkaXYgY2xhc3M9InJvbGUiPkdyYXBoaWMgRGVzaWduZXI8L2Rpdj48ZGl2IGNsYXNzPSJjb21wYW55Ij5MYWlrYSBEZXNpZ24gU3R1ZGlvPC9kaXY+PGRpdiBjbGFzcz0iZGF0ZSI+MjAyMSDigJQgMjAyMjwvZGl2PjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjb21wYW55Ij5Jbi1ob3VzZSDCtyBKdW5pb3IgbGV2ZWw8L2Rpdj4KICAgICAgPHVsPgogICAgICAgIDxsaT5EZXNpZ25lZCBleGhpYml0aW9uIHN0YW5kcyBmb3IgY3VsdHVyYWwgYW5kIHB1YmxpYyBwcm9qZWN0czwvbGk+CiAgICAgICAgPGxpPkNyZWF0ZWQgdmlzdWFsIG1hdGVyaWFscyBmb3IgdGhlIE5pZ2h0IG9mIE11c2V1bXMgZXZlbnRzIGluIFNhaW50IFBldGVyc2J1cmcgYW5kIHRoZSBMZW5pbmdyYWQgUmVnaW9uPC9saT4KICAgICAgICA8bGk+UHJlcGFyZWQgbWFnYXppbmUgbGF5b3V0cyBhbmQgcHJpbnQtcmVhZHkgZmlsZXM8L2xpPgogICAgICAgIDxsaT5EZXZlbG9wZWQgZXhoaWJpdGlvbiBncmFwaGljcyBhbmQgc3VwcG9ydGluZyBtYXRlcmlhbHMgZm9yIHByb2plY3RzIGFjcm9zcyBTYWludCBQZXRlcnNidXJnIGFuZCB0aGUgTGVuaW5ncmFkIFJlZ2lvbjwvbGk+CiAgICAgICAgPGxpPkRlc2lnbmVkIGludGVyYWN0aXZlIG1hdGVyaWFscyBmb3IgZXhoaWJpdGlvbnMgYW5kIGV2ZW50czwvbGk+CiAgICAgICAgPGxpPlJldmlld2VkIHByaW50IHByb29mcyBhbmQgcHJvZHVjdGlvbiB0ZXN0IHByaW50cyBiZWZvcmUgZmluYWwgb3V0cHV0PC9saT4KICAgICAgPC91bD4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgPGRpdj48ZGl2IGNsYXNzPSJyb2xlIj5HcmFwaGljIERlc2lnbmVyPC9kaXY+PGRpdiBjbGFzcz0iY29tcGFueSI+RnJlZWxhbmNlPC9kaXY+PGRpdiBjbGFzcz0iZGF0ZSI+TWFyY2ggMjAyMyDigJQgUHJlc2VudDwvZGl2PjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjb21wYW55Ij5JbmRlcGVuZGVudCBwcm9qZWN0czwvZGl2PgogICAgICA8dWw+CiAgICAgICAgPGxpPkJyYW5kIGlkZW50aXR5IGZyb20gY29uY2VwdCB0byBmaW5hbCBzeXN0ZW08L2xpPgogICAgICAgIDxsaT5Db21tZXJjaWFsIGlsbHVzdHJhdGlvbjwvbGk+CiAgICAgICAgPGxpPlByaW50IGRlc2lnbiBhbmQgcHJlcHJlc3M8L2xpPgogICAgICAgIDxsaT5JbmZvZ3JhcGhpY3MgYW5kIGUtY29tbWVyY2UgdmlzdWFsczwvbGk+CiAgICAgICAgPGxpPkFkdmVydGlzaW5nIGFuZCBzb2NpYWwgbWVkaWEgZGVzaWduIGZvciBidXNpbmVzc2VzPC9saT4KICAgICAgPC91bD4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgPGRpdj48ZGl2IGNsYXNzPSJyb2xlIj5HcmFwaGljIERlc2lnbmVyPC9kaXY+PGRpdiBjbGFzcz0iY29tcGFueSI+Q2FzZSBQbGFjZTwvZGl2PjxkaXYgY2xhc3M9ImRhdGUiPkp1bHkgMjAyMyDigJQgQXVndXN0IDIwMjYgwrcgMyB5ZWFycyAyIG1vbnRoczwvZGl2PjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJjb21wYW55Ij5Jbi1ob3VzZSDCtyBNaWRkbGUgbGV2ZWw8L2Rpdj4KICAgICAgPHVsPgogICAgICAgIDxsaT5NYW5hZ2VkIGEgY29sbGVjdGlvbiBvZiBvcmlnaW5hbCBwcmludHMgYW5kIGRldmVsb3BlZCBuZXcgdmlzdWFsIGRpcmVjdGlvbnM8L2xpPgogICAgICAgIDxsaT5DcmVhdGVkIG1vY2t1cHMgZnJvbSBzY3JhdGNoIGZvciBtdWx0aXBsZSBwcm9kdWN0IGZvcm1hdHM8L2xpPgogICAgICAgIDxsaT5Xb3JrZWQgb24gbGljZW5zZWQgcHJvZHVjdHM6IGNhbXBhaWduIG91dHB1dCBncmV3IDXDlywgYW5kIHByb2R1Y3RzIHdpdGggbXkgZGVzaWducyByZWFjaGVkIDFNIHZpZXdzIG9uIHNvY2lhbCBtZWRpYTwvbGk+CiAgICAgICAgPGxpPkRlc2lnbmVkIGUtY29tbWVyY2UgY3JlYXRpdmVzIGFuZCB3b3JrZWQgd2l0aCBhZHZlcnRpc2luZyBwZXJmb3JtYW5jZSBtZXRyaWNzPC9saT4KICAgICAgICA8bGk+Q3JlYXRlZCBwcmVzZW50YXRpb25zLCBwYWNrYWdpbmcgYW5kIHByb2R1Y3Rpb24tcmVhZHkgcHJpbnQgbGF5b3V0czwvbGk+CiAgICAgICAgPGxpPlRyYWluZWQgdXAgdG8gdHdvIGNvbGxlYWd1ZXMgYXQgYSB0aW1lIGFuZCBwcmVwYXJlZCBpbnRlcm5hbCBsZWFybmluZyBtYXRlcmlhbHM8L2xpPgogICAgICAgIDxsaT5EZXZlbG9wZWQgY29ycG9yYXRlIGlkZW50aXR5IG1hdGVyaWFscywgaW5jbHVkaW5nIHJlZGVzaWducywgbWVyY2hhbmRpc2UgYW5kIHByaW50IGFzc2V0czwvbGk+CiAgICAgIDwvdWw+CiAgICA8L2Rpdj4KICAgIDxkaXYgY2xhc3M9InJvdyI+CiAgICAgIDxkaXY+PGRpdiBjbGFzcz0icm9sZSI+RmlndXJlIFNrYXRpbmcgQ29hY2g8L2Rpdj48ZGl2IGNsYXNzPSJjb21wYW55Ij5GcmVlbGFuY2U8L2Rpdj48ZGl2IGNsYXNzPSJkYXRlIj5KYW51YXJ5IDIwMjEg4oCUIFByZXNlbnQ8L2Rpdj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY29tcGFueSI+UGFyYWxsZWwgcHJhY3RpY2UgwrcgQ2hpbGRyZW4gJiBhZHVsdHM8L2Rpdj4KICAgICAgPHVsPgogICAgICAgIDxsaT5Db2FjaCBib3RoIGNoaWxkcmVuIGFuZCBhZHVsdHMsIGZyb20gYmVnaW5uZXJzIHRvIGFkdmFuY2VkIHNrYXRlcnM8L2xpPgogICAgICAgIDxsaT5UZWFjaCBza2F0aW5nIHRlY2huaXF1ZSwgc3BpbnMgYW5kIGp1bXBzPC9saT4KICAgICAgICA8bGk+Q3JlYXRlIHJvdXRpbmVzIGFuZCB3b3JrIG9uIGdlbmVyYWwgcGh5c2ljYWwgdHJhaW5pbmcgYW5kIGZsZXhpYmlsaXR5PC9saT4KICAgICAgPC91bD4KICAgIDwvZGl2PgogIDwvc2VjdGlvbj4KCg==').decode('utf-8')
+          s, n = re.subn(r'  <section id="experience" class="reveal">[\s\S]*?(?=  <section id="skills" class="reveal">)', new_section, s, count=1)
           if n != 1:
               raise SystemExit('Could not replace experience section')
-
           p.write_text(s, encoding='utf-8')
       - name: Commit patch and remove temporary workflow
         shell: bash
