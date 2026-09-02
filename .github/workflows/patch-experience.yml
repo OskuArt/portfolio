@@ -1,0 +1,95 @@
+name: Patch experience order
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/patch-experience.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch experience section
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          new_section = '''  <section id="experience" class="reveal">
+    <div class="head"><h2>Experience <span class="section-no">03</span></h2><p>3+ years in graphic design across in-house and freelance roles. Figure skating coaching is a parallel practice.</p></div>
+    <div class="row">
+      <div><div class="role">Graphic Designer</div><div class="company">Laika Design Studio</div><div class="date">2021 — 2022</div></div>
+      <div class="company">In-house · Junior level</div>
+      <ul>
+        <li>Designed exhibition stands for cultural and public projects</li>
+        <li>Created visual materials for the Night of Museums events in Saint Petersburg and the Leningrad Region</li>
+        <li>Prepared magazine layouts and print-ready files</li>
+        <li>Developed exhibition graphics and supporting materials for projects across Saint Petersburg and the Leningrad Region</li>
+        <li>Designed interactive materials for exhibitions and events</li>
+        <li>Reviewed print proofs and production test prints before final output</li>
+      </ul>
+    </div>
+    <div class="row">
+      <div><div class="role">Graphic Designer</div><div class="company">Freelance</div><div class="date">March 2023 — Present</div></div>
+      <div class="company">Independent projects</div>
+      <ul>
+        <li>Brand identity from concept to final system</li>
+        <li>Commercial illustration</li>
+        <li>Print design and prepress</li>
+        <li>Infographics and e-commerce visuals</li>
+        <li>Advertising and social media design for businesses</li>
+      </ul>
+    </div>
+    <div class="row">
+      <div><div class="role">Graphic Designer</div><div class="company">Case Place</div><div class="date">July 2023 — August 2026 · 3 years 2 months</div></div>
+      <div class="company">In-house · Middle level</div>
+      <ul>
+        <li>Managed a collection of original prints and developed new visual directions</li>
+        <li>Created mockups from scratch for multiple product formats</li>
+        <li>Worked on licensed products: campaign output grew 5×, and products with my designs reached 1M views on social media</li>
+        <li>Designed e-commerce creatives and worked with advertising performance metrics</li>
+        <li>Created presentations, packaging and production-ready print layouts</li>
+        <li>Trained up to two colleagues at a time and prepared internal learning materials</li>
+        <li>Developed corporate identity materials, including redesigns, merchandise and print assets</li>
+      </ul>
+    </div>
+    <div class="row">
+      <div><div class="role">Figure Skating Coach</div><div class="company">Freelance</div><div class="date">January 2021 — Present</div></div>
+      <div class="company">Parallel practice · Children & adults</div>
+      <ul>
+        <li>Coach both children and adults, from beginners to advanced skaters</li>
+        <li>Teach skating technique, spins and jumps</li>
+        <li>Create routines and work on general physical training and flexibility</li>
+      </ul>
+    </div>
+  </section>
+
+'''
+
+          s, n = re.subn(
+              r'  <section id="experience" class="reveal">[\s\S]*?(?=  <section id="skills" class="reveal">)',
+              new_section,
+              s,
+              count=1,
+          )
+          if n != 1:
+              raise SystemExit('Could not replace experience section')
+
+          p.write_text(s, encoding='utf-8')
+      - name: Commit patch and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name 'chatgpt[bot]'
+          git config user.email 'chatgpt[bot]@users.noreply.github.com'
+          rm .github/workflows/patch-experience.yml
+          git add index.html .github/workflows/patch-experience.yml
+          git commit -m 'Reorder experience and update Laika level'
+          git push
