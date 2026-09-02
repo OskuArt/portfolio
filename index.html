@@ -86,22 +86,16 @@ h1 .ghost{color:transparent;-webkit-text-stroke:1.2px var(--ink)}
   will-change:transform;
 }
 .telegram-card-link img{
+  display:block;
   width:100%;
   height:auto;
-  border-radius:28px;
+  object-fit:contain;
+  border-radius:0;
+  background:transparent;
   filter:drop-shadow(0 24px 24px rgba(17,18,15,.18)) drop-shadow(0 6px 7px rgba(17,18,15,.10));
   transition:filter .38s cubic-bezier(.2,.8,.2,1);
 }
-.telegram-card-link:after{
-  content:"";
-  position:absolute;
-  inset:2.5% 2.5% 4%;
-  border-radius:24px;
-  background:linear-gradient(115deg,rgba(255,255,255,.30),transparent 24%,transparent 72%,rgba(255,255,255,.13));
-  opacity:.52;
-  pointer-events:none;
-  mix-blend-mode:screen;
-}
+.telegram-card-link:after{display:none}
 .telegram-card-link:hover{
   transform:translateY(-8px) rotate(-1.2deg) scale(1.045);
 }
@@ -379,7 +373,7 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
       </svg>
     </div>
     <a class="telegram-card-link" href="https://t.me/oskuarttt" target="_blank" rel="noreferrer" aria-label="Message me on Telegram">
-      <img src="assets/contact-card.png?v=20260902" alt="Kseniia Smirnova / Osku Halla graphic designer card">
+      <img src="contact-card-cropped.png" alt="Kseniia Smirnova / Osku Halla graphic designer card">
     </a>
   </div>
 
@@ -432,7 +426,7 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
   <section id="experience" class="reveal">
     <div class="head"><h2>Experience <span class="section-no">03</span></h2><p>3+ years in graphic design across in-house and freelance roles. Figure skating coaching is a parallel practice.</p></div>
     <div class="row">
-      <div><div class="role">Graphic Designer</div><div class="company">Laika Design Studio</div><div class="date">2021 — 2022</div></div>
+      <div><div class="role">Graphic Designer</div><div class="company">Laika Design Studio</div><div class="date">2022</div></div>
       <div class="company">In-house · Junior level</div>
       <ul>
         <li>Designed exhibition stands for cultural and public projects</li>
