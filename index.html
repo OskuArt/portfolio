@@ -555,6 +555,92 @@ body.cursor-hover .cursor-dot{width:7px;height:7px}
   .pc--smeshariki:hover .pc__art{transform:none!important}
 }
 
+
+/* Final mobile-only polish. Desktop intentionally untouched. */
+@media(max-width:620px){
+  .telegram-card-stage{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:-14px auto 32px!important;
+    padding:0 10px 8px!important;
+    overflow:visible!important;
+  }
+  .telegram-card-callout{
+    position:relative!important;
+    left:0!important;
+    top:auto!important;
+    width:68%!important;
+    max-width:255px!important;
+    margin:0 0 0 12px!important;
+    font-size:29px!important;
+    line-height:.9!important;
+    transform:rotate(-3deg)!important;
+    z-index:4!important;
+  }
+  .telegram-card-arrow{
+    position:absolute!important;
+    left:104px!important;
+    right:auto!important;
+    top:88px!important;
+    width:92px!important;
+    height:auto!important;
+    margin:0!important;
+    transform:rotate(34deg)!important;
+    z-index:5!important;
+    overflow:visible!important;
+  }
+  .telegram-card-link{
+    display:block!important;
+    width:82%!important;
+    max-width:355px!important;
+    margin:24px 5% 0 auto!important;
+    padding:2px!important;
+    border-radius:22px!important;
+    background:#fbf8f4!important;
+    overflow:hidden!important;
+    transform:none!important;
+    box-shadow:0 13px 24px rgba(17,18,15,.10),0 4px 9px rgba(17,18,15,.05)!important;
+    transition:none!important;
+  }
+  .telegram-card-link img{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    border-radius:20px!important;
+    transform:none!important;
+    filter:none!important;
+  }
+  .telegram-card-link::after{display:none!important}
+  .telegram-card-link:hover{transform:none!important}
+  .pc--caseplace .pc__logo{
+    left:18px!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:40px!important;
+    width:160px!important;
+    max-width:46%!important;
+    opacity:1!important;
+    filter:brightness(0) invert(1)!important;
+    mix-blend-mode:normal!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  .pc--caseplace:hover .pc__logo{transform:none!important}
+  .pc--smeshariki .pc__art{
+    left:22px!important;
+    right:auto!important;
+    bottom:-32px!important;
+    width:104px!important;
+    max-width:none!important;
+    opacity:1!important;
+    transform:none!important;
+    transition:none!important;
+    filter:drop-shadow(0 7px 10px rgba(17,18,15,.08))!important;
+  }
+  .pc--smeshariki:hover .pc__art{transform:none!important}
+}
+
 </style>
 </head>
 <body>
