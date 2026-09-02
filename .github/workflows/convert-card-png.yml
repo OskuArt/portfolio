@@ -50,3 +50,5 @@ jobs:
           git add index.html assets/contact-card.png
           git commit -m "Use PNG Telegram contact card"
           git push
+
+# rebuild requested 2026-09-02
