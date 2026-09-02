@@ -1,4 +1,4 @@
-name: Convert Telegram card to PNG
+name: Install Telegram card PNG
 
 on:
   push:
@@ -10,46 +10,36 @@ permissions:
   contents: write
 
 jobs:
-  convert:
+  install:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Convert contact card to PNG and patch HTML
+      - name: Build PNG from uploaded chunks
         shell: bash
         run: |
-          python -m pip install pillow
+          cat assets/.card-png-0.b64 assets/.card-png-1.b64 assets/.card-png-2.b64 assets/.card-png-3.b64 assets/.card-png-4.b64 assets/.card-png-5.b64 > /tmp/contact-card.b64
+          base64 --decode /tmp/contact-card.b64 > assets/contact-card.png
           python - <<'PY'
           from pathlib import Path
-          from PIL import Image
           import re
 
-          src = Path("assets/contact-card.webp")
-          dst = Path("assets/contact-card.png")
+          png = Path('assets/contact-card.png').read_bytes()
+          if not png.startswith(b'\x89PNG\r\n\x1a\n'):
+              raise SystemExit('Generated contact-card.png is not a valid PNG')
 
-          with Image.open(src) as im:
-              im = im.convert("RGBA")
-              im.save(dst, "PNG", optimize=True)
-
-          p = Path("index.html")
-          s = p.read_text(encoding="utf-8")
-
-          s = re.sub(
-              r'https://raw\.githubusercontent\.com/OskuArt/portfolio/main/assets/contact-card\.webp(?:\?[^"\']*)?',
-              'assets/contact-card.png?v=20260902-1',
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s, count = re.subn(
+              r'(class="telegram-card-link"[^>]*>[\s\S]*?<img\s+src=")[^"]+("[^>]*>)',
+              r'\1assets/contact-card.png?v=20260902-final\2',
               s,
+              count=1,
           )
-          s = re.sub(
-              r'assets/contact-card\.webp(?:\?[^"\']*)?',
-              'assets/contact-card.png?v=20260902-1',
-              s,
-          )
-
-          p.write_text(s, encoding="utf-8")
+          if count != 1:
+              raise SystemExit('Could not find Telegram card image in index.html')
+          p.write_text(s, encoding='utf-8')
+          print('PNG bytes:', len(png))
           PY
 
       - name: Commit PNG version
