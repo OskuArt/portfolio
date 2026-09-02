@@ -1,0 +1,101 @@
+name: Fix Behance titles and e-commerce category
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/fix-behance-meta.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch portfolio metadata and Behance sync
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+          import re
+
+          # 1. Existing projects: never show the Behance profile suffix in titles.
+          projects_path = Path('projects.json')
+          projects = json.loads(projects_path.read_text(encoding='utf-8'))
+
+          for project in projects:
+              title = str(project.get('title', '')).strip()
+              title = re.sub(r'\s*[-–—|]\s*Osku\s+Halla\s*$', '', title, flags=re.I).strip()
+              project['title'] = title
+
+              if str(project.get('id')) == '255090661':
+                  project['category'] = 'ecommerce'
+                  project['meta'] = 'E-commerce · Meta creatives'
+
+          projects_path.write_text(
+              json.dumps(projects, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8'
+          )
+
+          # 2. Add E-commerce as a visible Selected Work filter.
+          index_path = Path('index.html')
+          html = index_path.read_text(encoding='utf-8')
+          ecommerce_button = '<button class="filter" data-filter="ecommerce">E-commerce</button>'
+          if ecommerce_button not in html:
+              marker = '<button class="filter" data-filter="packaging">Packaging</button>'
+              if marker not in html:
+                  raise SystemExit('Packaging filter marker not found in index.html')
+              html = html.replace(marker, marker + '\n      ' + ecommerce_button, 1)
+          index_path.write_text(html, encoding='utf-8')
+
+          # 3. Future Behance sync: strip profile suffix and recognize e-commerce.
+          sync_path = Path('scripts/update_behance.py')
+          sync = sync_path.read_text(encoding='utf-8')
+
+          if '"ecommerce": "E-commerce · Behance project"' not in sync:
+              sync = sync.replace(
+                  '    "packaging": "Packaging · Behance project",',
+                  '    "packaging": "Packaging · Behance project",\n    "ecommerce": "E-commerce · Behance project",',
+                  1,
+              )
+
+          old_title_cleanup = '    title = re.sub(r"\\s+on Behance\\s*$", "", title, flags=re.I)\n'
+          new_title_cleanup = (
+              old_title_cleanup +
+              '    # Behance/Jina may append the profile display name to the page title.\n'
+              '    # Keep only the actual project title on the portfolio site.\n'
+              '    title = re.sub(r"\\s*[-–—|]\\s*Osku\\s+Halla\\s*$", "", title, flags=re.I)\n'
+          )
+          if 'Osku\\s+Halla' not in sync:
+              if old_title_cleanup not in sync:
+                  raise SystemExit('Title cleanup marker not found in update_behance.py')
+              sync = sync.replace(old_title_cleanup, new_title_cleanup, 1)
+
+          ecommerce_group = '''        ("ecommerce", (
+            "e-commerce", "ecommerce", "e commerce", "meta ads", "meta advertising",
+            "creative banners", "banners for meta", "ad creative", "ad creatives",
+            "advertising creative", "advertising creatives", "performance marketing",
+            "marketplace", "product card", "amazon listing", "wildberries", "ozon",
+            "wb card", "e-com", "shopping ads",
+        )),
+'''
+          if '("ecommerce", (' not in sync:
+              groups_marker = '    groups = [\n'
+              if groups_marker not in sync:
+                  raise SystemExit('Category groups marker not found in update_behance.py')
+              sync = sync.replace(groups_marker, groups_marker + ecommerce_group, 1)
+
+          sync_path.write_text(sync, encoding='utf-8')
+
+      - name: Commit patch and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name 'chatgpt[bot]'
+          git config user.email 'chatgpt[bot]@users.noreply.github.com'
+          rm .github/workflows/fix-behance-meta.yml
+          git add projects.json index.html scripts/update_behance.py .github/workflows/fix-behance-meta.yml
+          git commit -m 'Fix Behance titles and add e-commerce category'
+          git push
