@@ -304,7 +304,7 @@ footer{display:flex;justify-content:space-between;gap:20px;padding:20px 2px 0;fo
 .reveal{opacity:0;transform:translateY(14px);transition:.6s}
 .reveal.in{opacity:1;transform:none}
 
-.cursor-glow,.cursor-dot{position:fixed;left:0;top:0;pointer-events:none;z-index:1000;border-radius:50%;opacity:0;will-change:transform}
+.cursor-glow,.cursor-dot{position:fixed;left:0;top:0;pointer-events:none;z-index:100001;border-radius:50%;opacity:0;will-change:transform}
 .cursor-glow{width:36px;height:36px;background:rgba(242,138,91,.52);filter:blur(7px);mix-blend-mode:multiply;transform:translate3d(-100px,-100px,0) translate(-50%,-50%);transition:width .18s,height .18s,opacity .2s,filter .18s;contain:layout paint style}
 .cursor-dot{width:5px;height:5px;background:var(--accent);transform:translate3d(-100px,-100px,0) translate(-50%,-50%);transition:width .18s,height .18s,opacity .2s}
 body.cursor-over-card .cursor-glow{mix-blend-mode:normal;filter:blur(8px)}
@@ -665,6 +665,7 @@ body.nda-locked{overflow:hidden}
 .nda-gate__fineprint{margin:24px 0 0;font-size:9px;line-height:1.5;color:#8a8c86;max-width:540px}
 @media(max-width:620px){.nda-gate{padding:12px;align-items:center}.nda-gate__card{border-radius:24px;padding:24px 20px}.nda-gate__brand{margin-bottom:24px}.nda-gate h2{font-size:48px;margin-bottom:16px}.nda-gate__copy{font-size:12px;margin-bottom:22px}.nda-gate__row{grid-template-columns:1fr}.nda-gate__submit{min-height:48px}.nda-gate__code-wrap{margin-top:17px;align-items:center}.nda-gate__code-note{order:2;max-width:200px}}
 
+.nda-gate__fineprint a{color:var(--accent);font-weight:600;text-decoration:none}.nda-gate__fineprint a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -681,7 +682,7 @@ body.nda-locked{overflow:hidden}
       <div class="nda-gate__code-wrap"><button class="nda-gate__code" id="ndaGateCode" type="button" aria-label="Copy portfolio access code">OSKU-NDA-7K4R-26!</button><div class="nda-gate__code-note"><b>↖ Copy this code</b><br>and paste it into the field above.</div></div>
       <div class="nda-gate__error" id="ndaGateError" role="alert" aria-live="polite">That access code is incorrect. Please try again.</div>
     </form>
-    <p class="nda-gate__fineprint">Access is intended only for portfolio review. Please do not redistribute confidential project materials without permission.</p>
+    <p class="nda-gate__fineprint">Access is intended only for portfolio review. Please do not redistribute confidential project materials without permission from Kseniia S. (contact via Telegram: <a href="https://t.me/oskuarttt" target="_blank" rel="noreferrer">@oskuarttt</a>).</p>
   </div>
 </div>
 
