@@ -1,0 +1,241 @@
+name: Add NDA access gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/add-nda-gate.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add password gate
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          if 'id="ndaGate"' in s:
+              raise SystemExit('NDA gate already exists')
+
+          css = r'''
+
+/* NDA portfolio access gate */
+body.nda-locked{overflow:hidden}
+.nda-gate{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:grid;
+  place-items:center;
+  padding:22px;
+  background:
+    radial-gradient(circle at 86% 12%,rgba(242,138,91,.22) 0,transparent 30rem),
+    radial-gradient(circle at 9% 88%,rgba(220,255,81,.13) 0,transparent 22rem),
+    #f5f5f0;
+  opacity:1;
+  visibility:visible;
+  transition:opacity .34s ease,visibility .34s ease;
+}
+.nda-gate.is-open{opacity:0;visibility:hidden;pointer-events:none}
+.nda-gate__card{
+  width:min(100%,680px);
+  border:1px solid rgba(217,218,211,.95);
+  border-radius:30px;
+  background:rgba(251,251,247,.96);
+  box-shadow:0 28px 70px rgba(17,18,15,.12);
+  padding:clamp(26px,5vw,48px);
+  position:relative;
+  overflow:hidden;
+}
+.nda-gate__card:after{
+  content:"";
+  position:absolute;
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background:rgba(242,138,91,.12);
+  right:-92px;
+  top:-104px;
+  pointer-events:none;
+}
+.nda-gate__brand{display:flex;align-items:center;gap:11px;margin-bottom:34px;position:relative;z-index:2}
+.nda-gate__brand img{width:42px;height:42px;object-fit:contain;flex:0 0 auto}
+.nda-gate__brand span{font:600 13px "Space Grotesk",sans-serif}
+.nda-gate__eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.nda-gate h2{font:500 clamp(46px,8vw,78px)/.86 "Space Grotesk",sans-serif;letter-spacing:-.065em;margin:0 0 20px;max-width:560px}
+.nda-gate__copy{font-size:13px;line-height:1.62;color:#555851;max-width:580px;margin:0 0 28px}
+.nda-gate__form{position:relative;z-index:2}
+.nda-gate__label{display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.nda-gate__row{display:grid;grid-template-columns:1fr auto;gap:8px}
+.nda-gate__input{
+  width:100%;
+  min-width:0;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  border-radius:16px;
+  padding:15px 16px;
+  outline:none;
+  font:500 14px "Space Grotesk",sans-serif;
+  letter-spacing:.03em;
+  transition:border-color .2s,box-shadow .2s;
+}
+.nda-gate__input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(242,138,91,.12)}
+.nda-gate__submit{
+  border:0;
+  border-radius:16px;
+  background:var(--ink);
+  color:#fff;
+  padding:0 20px;
+  cursor:pointer;
+  font-size:11px;
+  transition:transform .18s,background .18s;
+}
+.nda-gate__submit:hover{background:#24251f;transform:translateY(-1px)}
+.nda-gate__code-wrap{margin-top:22px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.nda-gate__code-note{font-size:9px;color:var(--muted);line-height:1.35;max-width:170px;transform:rotate(-2deg);padding-bottom:3px}
+.nda-gate__code-note b{color:var(--accent);font-weight:500}
+.nda-gate__code{
+  border:1px solid var(--line);
+  background:var(--paper);
+  color:var(--ink);
+  border-radius:999px;
+  padding:10px 14px;
+  font:600 12px "Space Grotesk",sans-serif;
+  letter-spacing:.055em;
+  cursor:pointer;
+  transition:background .18s,border-color .18s,transform .18s;
+}
+.nda-gate__code:hover{background:#fff;border-color:#c8c9c2;transform:translateY(-1px)}
+.nda-gate__error{
+  margin-top:12px;
+  border:1px solid rgba(242,138,91,.45);
+  background:rgba(242,138,91,.10);
+  color:#9d4527;
+  border-radius:13px;
+  padding:10px 12px;
+  font-size:11px;
+  display:none;
+}
+.nda-gate__error.show{display:block;animation:ndaShake .28s ease}
+@keyframes ndaShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.nda-gate__fineprint{margin:24px 0 0;font-size:9px;line-height:1.5;color:#8a8c86;max-width:540px}
+@media(max-width:620px){
+  .nda-gate{padding:12px;align-items:center}
+  .nda-gate__card{border-radius:24px;padding:24px 20px}
+  .nda-gate__brand{margin-bottom:24px}
+  .nda-gate h2{font-size:48px;margin-bottom:16px}
+  .nda-gate__copy{font-size:12px;margin-bottom:22px}
+  .nda-gate__row{grid-template-columns:1fr}
+  .nda-gate__submit{min-height:48px}
+  .nda-gate__code-wrap{margin-top:17px;align-items:center}
+  .nda-gate__code-note{order:2;max-width:200px}
+}
+'''
+
+          html = r'''
+<div class="nda-gate" id="ndaGate" role="dialog" aria-modal="true" aria-labelledby="ndaGateTitle">
+  <div class="nda-gate__card">
+    <div class="nda-gate__brand">
+      <img id="ndaGateLogo" alt="Osku Halla logo">
+      <span>Kseniia Smirnova / Osku Halla</span>
+    </div>
+    <div class="nda-gate__eyebrow">Portfolio access · NDA</div>
+    <h2 id="ndaGateTitle">Private portfolio access.</h2>
+    <p class="nda-gate__copy">Some projects in this portfolio include confidential or NDA-covered materials. To keep review access controlled, this portfolio is protected by an access code. A review code has been assigned for this portfolio review and is shown below.</p>
+    <form class="nda-gate__form" id="ndaGateForm" novalidate>
+      <label class="nda-gate__label" for="ndaGateInput">Access code</label>
+      <div class="nda-gate__row">
+        <input class="nda-gate__input" id="ndaGateInput" type="password" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Paste your access code" aria-describedby="ndaGateError">
+        <button class="nda-gate__submit" type="submit">Enter portfolio ↗</button>
+      </div>
+      <div class="nda-gate__code-wrap">
+        <button class="nda-gate__code" id="ndaGateCode" type="button" aria-label="Copy portfolio access code">OSKU-NDA-7K4R-26!</button>
+        <div class="nda-gate__code-note"><b>↖ Copy this code</b><br>and paste it into the field above.</div>
+      </div>
+      <div class="nda-gate__error" id="ndaGateError" role="alert" aria-live="polite">That access code is incorrect. Please try again.</div>
+    </form>
+    <p class="nda-gate__fineprint">Access is intended only for portfolio review. Please do not redistribute confidential project materials without permission.</p>
+  </div>
+</div>
+'''
+
+          js = r'''
+<script>
+(() => {
+  const ACCESS_CODE = 'OSKU-NDA-7K4R-26!';
+  const gate = document.getElementById('ndaGate');
+  const form = document.getElementById('ndaGateForm');
+  const input = document.getElementById('ndaGateInput');
+  const error = document.getElementById('ndaGateError');
+  const codeButton = document.getElementById('ndaGateCode');
+  const logo = document.getElementById('ndaGateLogo');
+  const siteLogo = document.querySelector('.brand img');
+
+  document.body.classList.add('nda-locked');
+  if (siteLogo && logo) logo.src = siteLogo.src;
+
+  const unlock = () => {
+    gate.classList.add('is-open');
+    document.body.classList.remove('nda-locked');
+    window.setTimeout(() => gate.remove(), 380);
+  };
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (input.value.trim() === ACCESS_CODE) {
+      error.classList.remove('show');
+      unlock();
+      return;
+    }
+    error.classList.remove('show');
+    void error.offsetWidth;
+    error.classList.add('show');
+    input.select();
+  });
+
+  codeButton.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(ACCESS_CODE);
+      const old = codeButton.textContent;
+      codeButton.textContent = 'Copied ✓';
+      window.setTimeout(() => { codeButton.textContent = old; }, 1200);
+    } catch (_) {
+      input.value = ACCESS_CODE;
+      input.focus();
+      input.select();
+    }
+  });
+
+  window.setTimeout(() => input.focus(), 120);
+})();
+</script>
+'''
+
+          if '</style>' not in s or '<body>' not in s or '</body>' not in s:
+              raise SystemExit('Expected HTML markers not found')
+
+          s = s.replace('</style>', css + '\n</style>', 1)
+          s = s.replace('<body>', '<body>\n' + html, 1)
+          s = s.replace('</body>', js + '\n</body>', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "chatgpt[bot]"
+          git config user.email "chatgpt[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add NDA portfolio access gate"
+          git push
