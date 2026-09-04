@@ -1,0 +1,63 @@
+name: NDA gate cursor and fineprint fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/nda-cursor-fineprint.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Patch NDA gate
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          # Keep the existing blurred custom cursor visible above the NDA overlay.
+          old_cursor = 'pointer-events:none;z-index:1000;border-radius:50%;opacity:0;will-change:transform'
+          new_cursor = 'pointer-events:none;z-index:100001;border-radius:50%;opacity:0;will-change:transform'
+          if old_cursor in s:
+              s = s.replace(old_cursor, new_cursor, 1)
+          elif 'z-index:100001' not in s:
+              raise SystemExit('Cursor z-index marker not found')
+
+          old_fineprint = 'Access is intended only for portfolio review. Please do not redistribute confidential project materials without permission.'
+          new_fineprint = 'Access is intended only for portfolio review. Please do not redistribute confidential project materials without permission from Kseniia S. (contact via Telegram: <a href="https://t.me/oskuarttt" target="_blank" rel="noreferrer">@oskuarttt</a>).'
+          if old_fineprint in s:
+              s = s.replace(old_fineprint, new_fineprint, 1)
+          elif 'permission from Kseniia S.' not in s:
+              raise SystemExit('NDA fineprint marker not found')
+
+          link_css = '.nda-gate__fineprint a{color:var(--accent);font-weight:600;text-decoration:none}.nda-gate__fineprint a:hover{text-decoration:underline}'
+          if link_css not in s:
+              if '</style>' not in s:
+                  raise SystemExit('Closing style tag not found')
+              s = s.replace('</style>', link_css + '\n</style>', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "chatgpt[bot]"
+          git config user.email "chatgpt[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes needed."
+            exit 0
+          fi
+          git commit -m "Keep blurred cursor above NDA gate and update fineprint"
+          git push
