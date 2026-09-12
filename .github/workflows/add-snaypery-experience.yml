@@ -19,37 +19,7 @@ jobs:
       - name: Add experience row
         shell: bash
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-
-          if 'Рекламные Снайперы' in s:
-              raise SystemExit('Experience already exists')
-
-          marker = '''    <div class="row">
-      <div><div class="role">Figure Skating Coach</div><div class="company">Freelance</div><div class="date">January 2021 — Present</div></div>'''
-
-          block = '''    <div class="row">
-      <div><div class="role">Graphic Designer</div><div class="company">Рекламные Снайперы</div><div class="date">August 2026 — Present</div></div>
-      <div class="company">Independent projects · Middle level</div>
-      <ul>
-        <li>Design websites and landing pages for businesses across different industries, from visual direction and page structure to responsive layouts</li>
-        <li>Create advertising banners and performance creatives for digital campaigns, adapting concepts and formats for different platforms and audiences</li>
-        <li>Produce print and promotional materials, including flyers, brochures, POS assets, outdoor formats and other production-ready collateral</li>
-        <li>Develop campaign visuals and branded communication materials while working within different client guidelines and visual systems</li>
-        <li>Handle multiple independent client briefs, turning business goals into clear design solutions and preparing final files for digital and print production</li>
-      </ul>
-    </div>
-'''
-
-          if marker not in s:
-              raise SystemExit('Figure Skating Coach marker not found')
-
-          s = s.replace(marker, block + marker, 1)
-          p.write_text(s, encoding='utf-8')
-          PY
+          python3 -c "import base64,pathlib; p=pathlib.Path('index.html'); s=p.read_text(encoding='utf-8'); m=base64.b64decode('ICAgIDxkaXYgY2xhc3M9InJvdyI+CiAgICAgIDxkaXY+PGRpdiBjbGFzcz0icm9sZSI+RmlndXJlIFNrYXRpbmcgQ29hY2g8L2Rpdj48ZGl2IGNsYXNzPSJjb21wYW55Ij5GcmVlbGFuY2U8L2Rpdj48ZGl2IGNsYXNzPSJkYXRlIj5KYW51YXJ5IDIwMjEg4oCUIFByZXNlbnQ8L2Rpdj48L2Rpdj4=').decode(); b=base64.b64decode('ICAgIDxkaXYgY2xhc3M9InJvdyI+CiAgICAgIDxkaXY+PGRpdiBjbGFzcz0icm9sZSI+R3JhcGhpYyBEZXNpZ25lcjwvZGl2PjxkaXYgY2xhc3M9ImNvbXBhbnkiPtCg0LXQutC70LDQvNC90YvQtSDQodC90LDQudC/0LXRgNGLPC9kaXY+PGRpdiBjbGFzcz0iZGF0ZSI+QXVndXN0IDIwMjYg4oCUIFByZXNlbnQ8L2Rpdj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iY29tcGFueSI+SW5kZXBlbmRlbnQgcHJvamVjdHMgwrcgTWlkZGxlIGxldmVsPC9kaXY+CiAgICAgIDx1bD4KICAgICAgICA8bGk+RGVzaWduIHdlYnNpdGVzIGFuZCBsYW5kaW5nIHBhZ2VzIGZvciBidXNpbmVzc2VzIGFjcm9zcyBkaWZmZXJlbnQgaW5kdXN0cmllcywgZnJvbSB2aXN1YWwgZGlyZWN0aW9uIGFuZCBwYWdlIHN0cnVjdHVyZSB0byByZXNwb25zaXZlIGxheW91dHM8L2xpPgogICAgICAgIDxsaT5DcmVhdGUgYWR2ZXJ0aXNpbmcgYmFubmVycyBhbmQgcGVyZm9ybWFuY2UgY3JlYXRpdmVzIGZvciBkaWdpdGFsIGNhbXBhaWducywgYWRhcHRpbmcgY29uY2VwdHMgYW5kIGZvcm1hdHMgZm9yIGRpZmZlcmVudCBwbGF0Zm9ybXMgYW5kIGF1ZGllbmNlczwvbGk+CiAgICAgICAgPGxpPlByb2R1Y2UgcHJpbnQgYW5kIHByb21vdGlvbmFsIG1hdGVyaWFscywgaW5jbHVkaW5nIGZseWVycywgYnJvY2h1cmVzLCBQT1MgYXNzZXRzLCBvdXRkb29yIGZvcm1hdHMgYW5kIG90aGVyIHByb2R1Y3Rpb24tcmVhZHkgY29sbGF0ZXJhbDwvbGk+CiAgICAgICAgPGxpPkRldmVsb3AgY2FtcGFpZ24gdmlzdWFscyBhbmQgYnJhbmRlZCBjb21tdW5pY2F0aW9uIG1hdGVyaWFscyB3aGlsZSB3b3JraW5nIHdpdGhpbiBkaWZmZXJlbnQgY2xpZW50IGd1aWRlbGluZXMgYW5kIHZpc3VhbCBzeXN0ZW1zPC9saT4KICAgICAgICA8bGk+SGFuZGxlIG11bHRpcGxlIGluZGVwZW5kZW50IGNsaWVudCBicmllZnMsIHR1cm5pbmcgYnVzaW5lc3MgZ29hbHMgaW50byBjbGVhciBkZXNpZ24gc29sdXRpb25zIGFuZCBwcmVwYXJpbmcgZmluYWwgZmlsZXMgZm9yIGRpZ2l0YWwgYW5kIHByaW50IHByb2R1Y3Rpb248L2xpPgogICAgICA8L3VsPgogICAgPC9kaXY+Cg==').decode(); assert 'Рекламные Снайперы' not in s; assert m in s; p.write_text(s.replace(m,b+m,1),encoding='utf-8')"
 
       - name: Commit changes
         shell: bash
