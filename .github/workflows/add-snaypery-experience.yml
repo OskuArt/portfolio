@@ -1,0 +1,61 @@
+name: Add Snaypery experience
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/add-snaypery-experience.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add experience row
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          if 'Рекламные Снайперы' in s:
+              raise SystemExit('Experience already exists')
+
+          marker = '''    <div class="row">
+      <div><div class="role">Figure Skating Coach</div><div class="company">Freelance</div><div class="date">January 2021 — Present</div></div>'''
+
+          block = '''    <div class="row">
+      <div><div class="role">Graphic Designer</div><div class="company">Рекламные Снайперы</div><div class="date">August 2026 — Present</div></div>
+      <div class="company">Independent projects · Middle level</div>
+      <ul>
+        <li>Design websites and landing pages for businesses across different industries, from visual direction and page structure to responsive layouts</li>
+        <li>Create advertising banners and performance creatives for digital campaigns, adapting concepts and formats for different platforms and audiences</li>
+        <li>Produce print and promotional materials, including flyers, brochures, POS assets, outdoor formats and other production-ready collateral</li>
+        <li>Develop campaign visuals and branded communication materials while working within different client guidelines and visual systems</li>
+        <li>Handle multiple independent client briefs, turning business goals into clear design solutions and preparing final files for digital and print production</li>
+      </ul>
+    </div>
+'''
+
+          if marker not in s:
+              raise SystemExit('Figure Skating Coach marker not found')
+
+          s = s.replace(marker, block + marker, 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "chatgpt[bot]"
+          git config user.email "chatgpt[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add Advertising Snipers experience"
+          git push
