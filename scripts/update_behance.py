@@ -329,9 +329,9 @@ def build_new_project(found: dict) -> dict:
 def project_is_public(item: dict) -> bool:
     """Safely verify that an older Behance project still exists.
 
-    Projects visible on the current profile page do not need an extra request.
-    This check is only used for existing projects that are no longer present on
-    that first profile page. Temporary Reader/network errors are treated as
+    Every saved Behance project is checked individually so profile-page or CDN
+    caches cannot leave a deleted project on the portfolio. Temporary Reader or
+    network errors are treated as
     inconclusive and keep the project, so a transient outage cannot wipe cards.
     """
     pid = str(item.get("id") or "").strip()
@@ -348,6 +348,7 @@ def project_is_public(item: dict) -> bool:
             headers={
                 "Accept": "text/plain",
                 "X-Return-Format": "markdown",
+                "X-No-Cache": "true",
             },
         )
     except requests.RequestException as exc:
@@ -424,11 +425,8 @@ def main() -> int:
 
     profile_markdown = read_with_jina(PROFILE_URL)
     discovered = extract_project_links(profile_markdown)
-    discovered_ids = {found["id"] for found in discovered}
-
-    # The profile Reader is intentionally used only for the first page. Anything
-    # still visible there is definitely current. Older saved projects that are no
-    # longer on that first page are checked individually before being kept.
+    # Existing cards are verified against their own Behance URLs every day.
+    # The profile page is still used for discovering newly published projects.
     kept_existing = []
     removed_projects = []
     for item in existing:
@@ -437,7 +435,7 @@ def main() -> int:
             continue
 
         pid = str(item.get("id") or "").strip()
-        if not pid or pid in discovered_ids:
+        if not pid:
             kept_existing.append(item)
             continue
 
