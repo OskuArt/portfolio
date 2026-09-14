@@ -424,8 +424,15 @@ def maybe_write_keepalive() -> None:
 def main() -> int:
     existing = load_existing()
 
-    profile_markdown = read_with_jina(PROFILE_URL)
+    # Give Jina Reader a unique target URL on every run. Behance ignores this
+    # harmless query parameter, while Jina treats it as a fresh cache key. This
+    # prevents a recently deleted/unpublished project from lingering in the
+    # cached profile response.
+    separator = "&" if "?" in PROFILE_URL else "?"
+    profile_target = f"{PROFILE_URL}{separator}_portfolio_sync={int(time.time())}"
+    profile_markdown = read_with_jina(profile_target)
     discovered = extract_project_links(profile_markdown)
+    log("Fresh public profile IDs: " + ", ".join(found["id"] for found in discovered))
     discovered_ids = {found["id"] for found in discovered}
 
     # The fresh public Work page is the source of truth for the projects inside
