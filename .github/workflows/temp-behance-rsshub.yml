@@ -1,0 +1,44 @@
+name: RSSHub Behance deletion sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/temp-behance-rsshub.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r scripts/requirements.txt
+
+      - name: Patch RSSHub discovery
+        run: python scripts/patch_behance_rsshub.py
+
+      - name: Run Behance sync now
+        run: python scripts/update_behance.py
+
+      - name: Commit updater and synced portfolio
+        shell: bash
+        run: |
+          git config user.name "behance-sync[bot]"
+          git config user.email "behance-sync[bot]@users.noreply.github.com"
+          rm .github/workflows/temp-behance-rsshub.yml
+          rm scripts/patch_behance_rsshub.py
+          git add scripts/update_behance.py projects.json assets/project-previews .behance-sync-state.json .github/workflows/temp-behance-rsshub.yml scripts/patch_behance_rsshub.py
+          git commit -m "Use live Behance feed for removal checks"
+          git push
