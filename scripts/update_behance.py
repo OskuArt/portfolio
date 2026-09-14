@@ -3,17 +3,16 @@
 Behance -> projects.json sync for Kseniia Smirnova's portfolio.
 
 Why this version exists:
-GitHub-hosted runners can receive HTTP 403 from behance.net directly.
-This script therefore asks Jina Reader to render/read the public Behance pages
-and parses the returned Markdown. No Behance login, API token, or secret is
-required.
+The sync uses Behance's public GraphQL profile listing as the authoritative
+source for additions and removals. Jina Reader remains a safe fallback for
+reading project pages and extracting preview assets. No Behance login, API
+token, or secret is required.
 
 Sync policy:
 - Existing Behance projects are checked daily and removed from the site when their Behance project is no longer public.
 - Existing hand-edited titles/categories/previews are preserved.
-- New public projects found on the first Behance profile page are prepended.
-  (New Behance projects appear on the first profile page, which is exactly what
-  the daily sync needs.)
+- The full public Behance project list is paginated daily, so deleted or
+  unpublished projects are removed and newly published projects are prepended.
 - For a new project, the script tries to use the first Behance project-module
   image and save a local high-quality copy. If downloading that image fails,
   the remote high-quality CDN URL is kept instead.
@@ -26,6 +25,7 @@ import json
 import re
 import sys
 import time
+import uuid
 from datetime import datetime, timezone, timedelta
 from html import unescape
 from pathlib import Path
@@ -35,6 +35,25 @@ import requests
 
 PROFILE_URL = "https://www.behance.net/oskuhallaART/projects"
 RSS_URL = "https://www.behance.net/feeds/user?username=oskuhallaART"
+GRAPHQL_URL = "https://www.behance.net/v3/graphql"
+GRAPHQL_PROFILE_QUERY = r"""
+query GetProfileProjects($username: String, $after: String) {
+  user(username: $username) {
+    profileProjects(first: 12, after: $after) {
+      pageInfo { endCursor hasNextPage }
+      nodes {
+        id
+        name
+        slug
+        url
+        isPrivate
+        isHiddenFromWorkTab
+        privacyLevel
+      }
+    }
+  }
+}
+"""
 READER_PREFIX = "https://r.jina.ai/"
 PROJECTS_FILE = Path("projects.json")
 PREVIEW_DIR = Path("assets/project-previews")
@@ -153,13 +172,81 @@ def extract_project_links(markdown: str) -> list[dict]:
 
 
 def discover_public_projects() -> tuple[list[dict], str]:
-    """Return the freshest public-project window available.
+    """Return public Behance projects, preferring Behance's live GraphQL data.
 
-    Behance's user RSS feed is requested directly first. Unlike the rendered
-    profile proxy, it is designed as a publication feed and reflects public
-    project removals quickly. If Behance blocks or retires that feed, fall back
-    safely to the cache-busted Jina Reader profile used for discovery today.
+    The same public GraphQL endpoint used by Behance-facing feed tools exposes
+    the profile's project list without a login. It can be paginated, which makes
+    it authoritative for both additions and removals. If that endpoint is ever
+    unavailable, discovery falls back safely to RSS and then Jina Reader, but
+    deletion is disabled for those incomplete fallbacks in main().
     """
+    try:
+        projects: list[dict] = []
+        seen: set[str] = set()
+        after = ""
+
+        for page in range(1, 21):
+            bcp = str(uuid.uuid4())
+            log(f"GraphQL public-project fetch: page {page}")
+            response = SESSION.post(
+                GRAPHQL_URL,
+                timeout=REQUEST_TIMEOUT,
+                headers={
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Origin": "https://www.behance.net",
+                    "Referer": PROFILE_URL,
+                    "X-BCP": bcp,
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Cookie": (
+                        f"gk_suid={str(uuid.uuid4().int)[:8]}; gki=; "
+                        f"originalReferrer=; bcp={bcp}"
+                    ),
+                    "User-Agent": (
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/153.0.0.0 Safari/537.36"
+                    ),
+                },
+                json={
+                    "query": GRAPHQL_PROFILE_QUERY,
+                    "variables": {"username": "oskuhallaART", "after": after},
+                },
+            )
+            if response.status_code != 200:
+                raise RuntimeError(f"GraphQL HTTP {response.status_code}")
+
+            payload = response.json()
+            if payload.get("errors"):
+                raise RuntimeError(f"GraphQL errors: {payload['errors'][:1]}")
+
+            profile = (((payload.get("data") or {}).get("user") or {}).get("profileProjects") or {})
+            nodes = profile.get("nodes") or []
+            for node in nodes:
+                if node.get("isPrivate") or node.get("isHiddenFromWorkTab"):
+                    continue
+                pid = str(node.get("id") or "").strip()
+                url = str(node.get("url") or "").strip()
+                if not pid or not url or pid in seen:
+                    continue
+                seen.add(pid)
+                projects.append({"id": pid, "url": url})
+
+            page_info = profile.get("pageInfo") or {}
+            if not page_info.get("hasNextPage"):
+                break
+            after = str(page_info.get("endCursor") or "")
+            if not after:
+                raise RuntimeError("GraphQL pagination hasNextPage without endCursor")
+
+        if not projects:
+            raise RuntimeError("GraphQL returned no public Behance projects")
+
+        log("Live GraphQL public project IDs: " + ", ".join(p["id"] for p in projects))
+        return projects, "graphql"
+    except Exception as exc:
+        log(f"GraphQL discovery failed; trying RSS fallback: {exc}")
+
     try:
         log(f"RSS fetch: {RSS_URL}")
         response = SESSION.get(
@@ -180,9 +267,9 @@ def discover_public_projects() -> tuple[list[dict], str]:
             projects = extract_project_links(response.text)
             log("Fresh RSS project IDs: " + ", ".join(p["id"] for p in projects))
             return projects, "rss"
-        log(f"RSS unavailable (HTTP {response.status_code}); using profile Reader fallback.")
+        log(f"RSS unavailable (HTTP {response.status_code}); using Reader fallback.")
     except Exception as exc:
-        log(f"RSS discovery failed; using profile Reader fallback: {exc}")
+        log(f"RSS discovery failed; using Reader fallback: {exc}")
 
     separator = "&" if "?" in PROFILE_URL else "?"
     profile_target = f"{PROFILE_URL}{separator}_portfolio_sync={int(time.time())}"
@@ -469,57 +556,30 @@ def main() -> int:
     discovered_ids = {found["id"] for found in discovered}
     log(f"Deletion sync source: {discovery_source}")
 
-    # The fresh public Work page is the source of truth for the projects inside
-    # its visible newest-project window. This catches deleted/unpublished work
-    # even when an old direct project URL still resolves from a cache. Projects
-    # older than that window are verified individually so they are never removed
-    # merely because they have naturally fallen off the first profile page.
-    existing_positions = {
-        str(item.get("id")): index
-        for index, item in enumerate(existing)
-        if str(item.get("source") or "").lower() == "behance" and item.get("id")
-    }
-    matched_positions = [
-        existing_positions[found["id"]]
-        for found in discovered
-        if found["id"] in existing_positions
-    ]
-    visible_boundary = max(matched_positions) if matched_positions else -1
-
     kept_existing = []
     removed_projects = []
-    for index, item in enumerate(existing):
-        if str(item.get("source") or "").lower() != "behance":
-            kept_existing.append(item)
-            continue
 
-        pid = str(item.get("id") or "").strip()
-        if not pid:
-            kept_existing.append(item)
-            continue
+    if discovery_source == "graphql":
+        # GraphQL is paginated through the full public profile, so absence here
+        # means the project is no longer publicly listed by this Behance user.
+        for item in existing:
+            if str(item.get("source") or "").lower() != "behance":
+                kept_existing.append(item)
+                continue
 
-        missing_from_visible_profile = (
-            visible_boundary >= 0
-            and index <= visible_boundary
-            and pid not in discovered_ids
-        )
+            pid = str(item.get("id") or "").strip()
+            if not pid or pid in discovered_ids:
+                kept_existing.append(item)
+                continue
 
-        if missing_from_visible_profile:
             removed_projects.append(item)
             remove_local_previews(pid)
-            log(f"Removed project missing from public Behance profile: {item.get('title', pid)} [{pid}]")
-            continue
-
-        # Older projects outside the first-page window are checked by URL. A
-        # temporary Reader/network error keeps the card rather than deleting it.
-        if index > visible_boundary and not project_is_public(item):
-            removed_projects.append(item)
-            remove_local_previews(pid)
-            log(f"Removed unavailable Behance project: {item.get('title', pid)} [{pid}]")
-        else:
-            kept_existing.append(item)
-
-        time.sleep(0.35)
+            log(f"Removed project no longer public on Behance: {item.get('title', pid)} [{pid}]")
+    else:
+        # RSS/Reader responses are useful for finding new work but may be partial
+        # or cached, so they are never allowed to delete existing cards.
+        kept_existing = existing
+        log("Deletion skipped because the authoritative GraphQL listing was unavailable.")
 
     existing = kept_existing
     existing_ids = {str(item.get("id")) for item in existing if item.get("id")}
