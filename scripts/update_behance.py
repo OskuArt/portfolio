@@ -33,7 +33,7 @@ from urllib.parse import urlparse
 
 import requests
 
-PROFILE_URL = "https://www.behance.net/oskuhallaART"
+PROFILE_URL = "https://www.behance.net/oskuhallaART/projects"
 READER_PREFIX = "https://r.jina.ai/"
 PROJECTS_FILE = Path("projects.json")
 PREVIEW_DIR = Path("assets/project-previews")
@@ -94,6 +94,7 @@ def read_with_jina(target_url: str) -> str:
             # These headers are understood by Jina Reader and keep the output
             # suitable for link/image extraction.
             "X-Return-Format": "markdown",
+            "X-No-Cache": "true",
         },
     )
     text = response.text
@@ -425,11 +426,28 @@ def main() -> int:
 
     profile_markdown = read_with_jina(PROFILE_URL)
     discovered = extract_project_links(profile_markdown)
-    # Existing cards are verified against their own Behance URLs every day.
-    # The profile page is still used for discovering newly published projects.
+    discovered_ids = {found["id"] for found in discovered}
+
+    # The fresh public Work page is the source of truth for the projects inside
+    # its visible newest-project window. This catches deleted/unpublished work
+    # even when an old direct project URL still resolves from a cache. Projects
+    # older than that window are verified individually so they are never removed
+    # merely because they have naturally fallen off the first profile page.
+    existing_positions = {
+        str(item.get("id")): index
+        for index, item in enumerate(existing)
+        if str(item.get("source") or "").lower() == "behance" and item.get("id")
+    }
+    matched_positions = [
+        existing_positions[found["id"]]
+        for found in discovered
+        if found["id"] in existing_positions
+    ]
+    visible_boundary = max(matched_positions) if matched_positions else -1
+
     kept_existing = []
     removed_projects = []
-    for item in existing:
+    for index, item in enumerate(existing):
         if str(item.get("source") or "").lower() != "behance":
             kept_existing.append(item)
             continue
@@ -439,15 +457,28 @@ def main() -> int:
             kept_existing.append(item)
             continue
 
-        if project_is_public(item):
-            kept_existing.append(item)
-        else:
+        missing_from_visible_profile = (
+            visible_boundary >= 0
+            and index <= visible_boundary
+            and pid not in discovered_ids
+        )
+
+        if missing_from_visible_profile:
             removed_projects.append(item)
             remove_local_previews(pid)
-            log(f"Removed deleted/private Behance project: {item.get('title', pid)} [{pid}]")
+            log(f"Removed project missing from public Behance profile: {item.get('title', pid)} [{pid}]")
+            continue
 
-        # Keep the unauthenticated Reader usage gentle.
-        time.sleep(0.5)
+        # Older projects outside the first-page window are checked by URL. A
+        # temporary Reader/network error keeps the card rather than deleting it.
+        if index > visible_boundary and not project_is_public(item):
+            removed_projects.append(item)
+            remove_local_previews(pid)
+            log(f"Removed unavailable Behance project: {item.get('title', pid)} [{pid}]")
+        else:
+            kept_existing.append(item)
+
+        time.sleep(0.35)
 
     existing = kept_existing
     existing_ids = {str(item.get("id")) for item in existing if item.get("id")}
