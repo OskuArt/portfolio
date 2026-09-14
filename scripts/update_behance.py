@@ -36,6 +36,7 @@ import requests
 PROFILE_URL = "https://www.behance.net/oskuhallaART/projects"
 RSS_URL = "https://www.behance.net/feeds/user?username=oskuhallaART"
 GRAPHQL_URL = "https://www.behance.net/v3/graphql"
+RSSHUB_URL = "https://rsshub.app/behance/oskuhallaART/projects"
 GRAPHQL_PROFILE_QUERY = r"""
 query GetProfileProjects($username: String, $after: String) {
   user(username: $username) {
@@ -245,7 +246,28 @@ def discover_public_projects() -> tuple[list[dict], str]:
         log("Live GraphQL public project IDs: " + ", ".join(p["id"] for p in projects))
         return projects, "graphql"
     except Exception as exc:
-        log(f"GraphQL discovery failed; trying RSS fallback: {exc}")
+        log(f"GraphQL discovery failed; trying RSSHub fallback: {exc}")
+
+    try:
+        rsshub_target = f"{RSSHUB_URL}?_portfolio_sync={int(time.time())}"
+        log(f"RSSHub fetch: {rsshub_target}")
+        response = SESSION.get(
+            rsshub_target,
+            timeout=REQUEST_TIMEOUT,
+            allow_redirects=True,
+            headers={
+                "Accept": "application/rss+xml,application/atom+xml,application/xml,text/xml,*/*",
+                "Cache-Control": "no-cache",
+                "User-Agent": "Mozilla/5.0 portfolio-sync/1.0",
+            },
+        )
+        if response.status_code == 200 and len(response.text.strip()) >= 100:
+            projects = extract_project_links(response.text)
+            log("Fresh RSSHub project IDs: " + ", ".join(p["id"] for p in projects))
+            return projects, "rsshub"
+        log(f"RSSHub unavailable (HTTP {response.status_code}); trying Behance RSS.")
+    except Exception as exc:
+        log(f"RSSHub discovery failed; trying Behance RSS: {exc}")
 
     try:
         log(f"RSS fetch: {RSS_URL}")
@@ -575,11 +597,41 @@ def main() -> int:
             removed_projects.append(item)
             remove_local_previews(pid)
             log(f"Removed project no longer public on Behance: {item.get('title', pid)} [{pid}]")
+    elif discovery_source == "rsshub":
+        # RSSHub reads Behance's live GraphQL profile but exposes the newest
+        # project window only. It is authoritative inside that visible window,
+        # while older cards are kept rather than guessed away.
+        existing_positions = {
+            str(item.get("id")): index
+            for index, item in enumerate(existing)
+            if str(item.get("source") or "").lower() == "behance" and item.get("id")
+        }
+        matched_positions = [
+            existing_positions[found["id"]]
+            for found in discovered
+            if found["id"] in existing_positions
+        ]
+        visible_boundary = max(matched_positions) if matched_positions else -1
+
+        for index, item in enumerate(existing):
+            if str(item.get("source") or "").lower() != "behance":
+                kept_existing.append(item)
+                continue
+            pid = str(item.get("id") or "").strip()
+            if not pid:
+                kept_existing.append(item)
+                continue
+            if visible_boundary >= 0 and index <= visible_boundary and pid not in discovered_ids:
+                removed_projects.append(item)
+                remove_local_previews(pid)
+                log(f"Removed project missing from live Behance window: {item.get('title', pid)} [{pid}]")
+            else:
+                kept_existing.append(item)
     else:
-        # RSS/Reader responses are useful for finding new work but may be partial
-        # or cached, so they are never allowed to delete existing cards.
+        # Direct RSS/Reader responses may be partial or cached, so they are never
+        # allowed to delete existing cards.
         kept_existing = existing
-        log("Deletion skipped because the authoritative GraphQL listing was unavailable.")
+        log("Deletion skipped because no trustworthy live listing was available.")
 
     existing = kept_existing
     existing_ids = {str(item.get("id")) for item in existing if item.get("id")}
