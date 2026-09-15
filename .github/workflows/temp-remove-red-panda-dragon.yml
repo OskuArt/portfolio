@@ -1,0 +1,31 @@
+name: Remove deleted Red Panda Dragon case
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/temp-remove-red-panda-dragon.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Remove deleted case
+        run: python3 scripts/remove_deleted_red_panda_dragon.py
+
+      - name: Commit cleanup
+        run: |
+          git config user.name "behance-sync[bot]"
+          git config user.email "behance-sync[bot]@users.noreply.github.com"
+          rm .github/workflows/temp-remove-red-panda-dragon.yml
+          rm scripts/remove_deleted_red_panda_dragon.py
+          git add projects.json assets/project-previews .github/workflows/temp-remove-red-panda-dragon.yml scripts/remove_deleted_red_panda_dragon.py
+          git commit -m "Remove deleted Red Panda and Dragon case"
+          git push
