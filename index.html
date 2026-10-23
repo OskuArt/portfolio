@@ -1066,7 +1066,11 @@ if(finePointer && !reduceMotion){
   const codeButton = document.getElementById('ndaGateCode');
   const logo = document.getElementById('ndaGateLogo');
   const siteLogo = document.querySelector('.brand img');
-  let alreadyUnlocked=false;try{alreadyUnlocked=sessionStorage.getItem('oskuPortfolioAccess')==='granted'}catch(_){}\n  document.body.classList.add('nda-locked');\n  if (siteLogo && logo) logo.src = siteLogo.src;\n  const unlock = () => {try{sessionStorage.setItem('oskuPortfolioAccess','granted')}catch(_){}gate.classList.add('is-open');document.body.classList.remove('nda-locked');window.setTimeout(() => gate.remove(), 380)};\n  if(alreadyUnlocked){unlock();return;}
+  let alreadyUnlocked=false;try{alreadyUnlocked=sessionStorage.getItem('oskuPortfolioAccess')==='granted'}catch(_){}
+  document.body.classList.add('nda-locked');
+  if (siteLogo && logo) logo.src = siteLogo.src;
+  const unlock = () => {try{sessionStorage.setItem('oskuPortfolioAccess','granted')}catch(_){}gate.classList.add('is-open');document.body.classList.remove('nda-locked');window.setTimeout(() => gate.remove(), 380)};
+  if(alreadyUnlocked){unlock();return;}
   form.addEventListener('submit', (event) => {event.preventDefault();if (input.value.trim() === ACCESS_CODE){error.classList.remove('show');unlock();return}error.classList.remove('show');void error.offsetWidth;error.classList.add('show');input.select()});
   codeButton.addEventListener('click', async () => {try{await navigator.clipboard.writeText(ACCESS_CODE);const old=codeButton.textContent;codeButton.textContent='Copied ✓';window.setTimeout(()=>{codeButton.textContent=old},1200)}catch(_){input.value=ACCESS_CODE;input.focus();input.select()}});
   window.setTimeout(() => input.focus(), 120);
