@@ -23,7 +23,7 @@ h1,h2,h3{font-family:"Space Grotesk";font-weight:500}h1{font-size:clamp(78px,11v
 .hero-copy{grid-column:1;font-size:clamp(18px,1.7vw,25px);line-height:1.2;letter-spacing:-.03em;margin:0;max-width:590px}.roleline{grid-column:1;display:inline-flex;gap:8px;flex-wrap:wrap}.tag{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:9px 12px;font-size:10px}
 .printari-mark{grid-column:2;grid-row:1/3;width:66px;height:82px;object-fit:contain;margin:0;justify-self:end;filter:drop-shadow(0 12px 18px rgba(17,18,15,.07))}
 .stat{border:1px solid var(--line);border-radius:18px;background:var(--paper);padding:17px}.stat b{display:block;font:500 clamp(28px,4vw,48px)/.9 "Space Grotesk";letter-spacing:-.05em;color:var(--accent)}.stat span{display:block;margin-top:8px;font-size:10px;line-height:1.35;color:var(--muted)}
-section{padding:42px 0}.head{border-top:1px solid var(--line);padding-top:14px;margin-bottom:20px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(300px,.72fr);justify-content:start;align-items:end;gap:clamp(28px,4vw,56px)}.head h2{font-size:clamp(44px,5.6vw,78px);line-height:.9;letter-spacing:-.055em;margin:0;max-width:640px}.head p{max-width:430px;color:var(--muted);font-size:12px;line-height:1.55;margin:0}
+section{padding:34px 0}.head{border-top:1px solid var(--line);padding-top:14px;margin-bottom:18px;display:grid;grid-template-columns:minmax(320px,520px) minmax(280px,420px);justify-content:start;align-items:end;gap:28px;max-width:980px}.head h2{font-size:clamp(44px,5.2vw,74px);line-height:.9;letter-spacing:-.055em;margin:0;max-width:520px}.head p{max-width:420px;color:var(--muted);font-size:12px;line-height:1.55;margin:0}
 .ownership{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.own{border:1px solid var(--line);border-radius:24px;background:var(--paper);padding:24px;min-height:230px}.own small{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}.own h3{font-size:30px;line-height:.95;letter-spacing:-.04em;margin:40px 0 13px}.own p{font-size:12px;line-height:1.55;color:#555851;margin:0}
 .catalog{background:#151613;color:#fff;border-radius:28px;padding:30px;display:grid;grid-template-columns:minmax(0,.95fr) minmax(420px,1.05fr);gap:34px;align-items:center;overflow:hidden}.catalog h3{font-size:clamp(42px,5.4vw,72px);line-height:.89;letter-spacing:-.055em;margin:8px 0 16px}.catalog p{font-size:13px;line-height:1.6;color:#c5c7c0;max-width:520px}.feature-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.feature-list span{border:1px solid #3c3e38;border-radius:999px;padding:9px 11px;font-size:9px;color:#e7e8e2}.demo{background:#090a09;border:1px solid #34352f;border-radius:22px;padding:12px;position:relative;display:grid;place-items:center}.demo img{display:block;width:min(100%,480px);height:auto;margin:0 auto;border-radius:12px;background:#0b0b0b;image-rendering:auto}.demo-label{position:absolute;left:22px;top:22px;background:var(--lime);color:#111;border-radius:999px;padding:8px 11px;font-size:9px;font-weight:600}
 .impact{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.impact .stat{background:#20211e;border-color:#363833}.impact .stat span{color:#b7b9b2}.impact .stat b{color:var(--lime)}
@@ -82,7 +82,7 @@ footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);fo
         <p>I proposed and developed the structure of a dedicated print-management website. It combines previews, metadata and filters with an automated similarity layer, so designers can spot repeated graphics before preparing another version of the same asset.</p>
         <div class="feature-list"><span>Automatic duplicate highlighting</span><span>Pixel-analysis similarity script</span><span>Tagging system</span><span>Tag-based filters</span><span>Searchable asset library</span><span>Product category structure</span></div>
       </div>
-      <div class="demo"><span class="demo-label">LIVE DEMO PREVIEW</span><img src="assets/printari/catalog-demo.webp" alt="Animated demo of the Printari print catalog interface"></div>
+      <div class="demo"><span class="demo-label">DEMO · NATIVE RESOLUTION</span><img src="assets/printari/catalog-demo.webp" alt="Animated demo of the Printari print catalog interface"></div>
     </div>
     <div class="impact">
       <div class="stat"><b>~60%</b><span>less manual duplicate-check effort, workflow estimate</span></div>
@@ -90,7 +90,7 @@ footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);fo
       <div class="stat"><b>5</b><span>catalog categories in one consistent structure</span></div>
       <div class="stat"><b>100%</b><span>tag-filterable coverage for assets entered into the system</span></div>
     </div>
-      </section>
+  </section>
 
   <section id="visuals">
     <div class="head"><h2>Market-led visuals</h2><p>Three visual directions developed from marketplace research. Each system solves a different communication task while staying inside one brand ecosystem.</p></div>
