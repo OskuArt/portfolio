@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Printari · Kseniia Smirnova / Osku Halla</title>
+<meta name="description" content="Printari case study by Kseniia Smirnova: brand visual direction, marketplace design, design operations and an internal print catalog tool.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f5f0;--paper:#fbfbf7;--ink:#11120f;--muted:#74766f;--accent:#f28a5b;--lime:#dcff51;--line:#d9dad3}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+body.nda-locked{overflow:hidden}
+.shell{width:min(1180px,calc(100% - 34px));margin:0 auto;padding:18px 0 70px}
+nav{position:sticky;top:14px;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:10px 12px;border:1px solid rgba(217,218,211,.9);border-radius:18px;background:rgba(251,251,247,.86);backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:10px;width:max-content;font:600 13px "Space Grotesk"}.brand img{width:38px;height:38px;object-fit:contain}
+.navlinks{display:flex;gap:7px}.navlinks a{padding:8px 12px;border-radius:999px;font-size:11px}.navlinks a:hover{background:#ecece6}.navmeta{justify-self:end;font-size:10px;color:var(--muted)}
+.hero{padding:92px 0 38px;display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:end}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:16px}
+h1,h2,h3{font-family:"Space Grotesk";font-weight:500}h1{font-size:clamp(78px,12vw,168px);line-height:.78;letter-spacing:-.075em;margin:0}.accent{color:var(--accent)}
+.hero-copy{font-size:clamp(20px,2.2vw,30px);line-height:1.18;letter-spacing:-.035em;margin:0 0 22px;max-width:620px}.roleline{display:inline-flex;gap:8px;flex-wrap:wrap}.tag{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:9px 12px;font-size:10px}
+.printari-mark{width:110px;height:132px;object-fit:contain;margin-left:auto;filter:drop-shadow(0 16px 24px rgba(17,18,15,.08))}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:24px 0 4px}.stat{border:1px solid var(--line);border-radius:18px;background:var(--paper);padding:17px}.stat b{display:block;font:500 clamp(28px,4vw,48px)/.9 "Space Grotesk";letter-spacing:-.05em;color:var(--accent)}.stat span{display:block;margin-top:8px;font-size:10px;line-height:1.35;color:var(--muted)}
+section{padding:58px 0}.head{border-top:1px solid var(--line);padding-top:15px;margin-bottom:23px;display:flex;justify-content:space-between;align-items:end;gap:30px}.head h2{font-size:clamp(48px,7vw,96px);line-height:.88;letter-spacing:-.063em;margin:0}.head p{max-width:480px;color:var(--muted);font-size:12px;line-height:1.55;margin:0}
+.ownership{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.own{border:1px solid var(--line);border-radius:24px;background:var(--paper);padding:24px;min-height:245px}.own small{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}.own h3{font-size:30px;line-height:.95;letter-spacing:-.04em;margin:48px 0 13px}.own p{font-size:12px;line-height:1.55;color:#555851;margin:0}
+.catalog{background:#151613;color:#fff;border-radius:30px;padding:34px;display:grid;grid-template-columns:.86fr 1.14fr;gap:28px;align-items:center;overflow:hidden}.catalog h3{font-size:clamp(42px,6vw,80px);line-height:.88;letter-spacing:-.06em;margin:8px 0 18px}.catalog p{font-size:13px;line-height:1.6;color:#c5c7c0;max-width:520px}.feature-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.feature-list span{border:1px solid #3c3e38;border-radius:999px;padding:9px 11px;font-size:9px;color:#e7e8e2}.demo{background:#090a09;border:1px solid #34352f;border-radius:24px;padding:12px;position:relative}.demo img{width:100%;border-radius:16px;background:#0b0b0b}.demo-label{position:absolute;left:24px;top:24px;background:var(--lime);color:#111;border-radius:999px;padding:8px 11px;font-size:9px;font-weight:600}
+.impact{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.impact .stat{background:#20211e;border-color:#363833}.impact .stat span{color:#b7b9b2}.impact .stat b{color:var(--lime)}
+.direction{margin:0 0 34px;border:1px solid var(--line);border-radius:28px;background:var(--paper);overflow:hidden}.direction img{width:100%;height:auto}.dircopy{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;padding:24px}.dircopy h3{font-size:34px;line-height:.96;letter-spacing:-.04em;margin:0}.dircopy p{font-size:12px;line-height:1.55;color:#555851;margin:0}.metricline{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.metricline span{border:1px solid var(--line);border-radius:999px;padding:7px 9px;font-size:9px;color:var(--muted)}
+.note{font-size:10px;line-height:1.55;color:var(--muted);max-width:760px}
+.end{background:var(--accent);border-radius:30px;padding:38px;display:flex;justify-content:space-between;align-items:end;gap:30px}.end h2{font-size:clamp(52px,8vw,110px);line-height:.78;letter-spacing:-.07em;margin:0}.back{background:var(--lime);border:1px solid #111;border-radius:999px;padding:12px 16px;font-size:11px}
+footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:9px;margin-top:20px}
+.cursor-glow,.cursor-dot{position:fixed;left:0;top:0;pointer-events:none;z-index:100000;border-radius:50%;opacity:0;will-change:transform}.cursor-glow{width:36px;height:36px;background:rgba(242,138,91,.52);filter:blur(7px);mix-blend-mode:multiply;transform:translate3d(-100px,-100px,0) translate(-50%,-50%);transition:width .18s,height .18s,opacity .2s,filter .18s}.cursor-dot{width:5px;height:5px;background:var(--accent);transform:translate3d(-100px,-100px,0) translate(-50%,-50%);transition:width .18s,height .18s,opacity .2s}body.cursor-ready .cursor-glow,body.cursor-ready .cursor-dot{opacity:1}body.cursor-hover .cursor-glow{width:58px;height:58px;filter:blur(10px);background:rgba(242,138,91,.38)}body.cursor-hover .cursor-dot{width:7px;height:7px}
+.nda-gate{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 86% 12%,rgba(242,138,91,.22) 0,transparent 30rem),radial-gradient(circle at 9% 88%,rgba(220,255,81,.13) 0,transparent 22rem),#f5f5f0;opacity:1;visibility:visible;transition:opacity .34s ease,visibility .34s ease}.nda-gate.is-open{opacity:0;visibility:hidden;pointer-events:none}.nda-gate__card{width:min(100%,680px);border:1px solid rgba(217,218,211,.95);border-radius:30px;background:rgba(251,251,247,.96);box-shadow:0 28px 70px rgba(17,18,15,.12);padding:clamp(26px,5vw,48px);position:relative;overflow:hidden}.nda-gate__brand{display:flex;align-items:center;gap:11px;margin-bottom:30px}.nda-gate__brand img{width:42px;height:42px;object-fit:contain}.nda-gate__brand span{font:600 13px "Space Grotesk"}.nda-gate__eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}.nda-gate h2{font:500 clamp(46px,8vw,78px)/.86 "Space Grotesk";letter-spacing:-.065em;margin:0 0 20px}.nda-gate__copy{font-size:13px;line-height:1.62;color:#555851;margin:0 0 28px}.nda-gate__row{display:grid;grid-template-columns:1fr auto;gap:8px}.nda-gate__input{width:100%;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:16px;padding:15px 16px;outline:none;font:500 14px "Space Grotesk"}.nda-gate__submit{border:0;border-radius:16px;background:var(--ink);color:#fff;padding:0 20px;cursor:pointer}.nda-gate__code-wrap{margin-top:22px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}.nda-gate__code-note{font-size:9px;color:var(--muted);line-height:1.35;max-width:170px}.nda-gate__code-note b{color:var(--accent);font-weight:500}.nda-gate__code{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:10px 14px;font:600 12px "Space Grotesk";cursor:pointer}.nda-gate__error{margin-top:12px;border:1px solid rgba(242,138,91,.45);background:rgba(242,138,91,.10);color:#9d4527;border-radius:13px;padding:10px 12px;font-size:11px;display:none}.nda-gate__error.show{display:block}.nda-gate__fineprint{margin:24px 0 0;font-size:9px;line-height:1.5;color:#8a8c86}.nda-gate__fineprint a{color:var(--accent);font-weight:600}
+@media(max-width:900px){nav{grid-template-columns:1fr auto}.navmeta{display:none}.hero{grid-template-columns:1fr}.printari-mark{margin:10px 0 0}.stats,.impact{grid-template-columns:repeat(2,1fr)}.ownership{grid-template-columns:1fr}.catalog{grid-template-columns:1fr}.dircopy{grid-template-columns:1fr}}
+@media(max-width:620px){.shell{width:min(100% - 20px,1180px);padding-top:10px}.navlinks a:nth-child(n+2){display:none}.hero{padding-top:70px}.stats,.impact{grid-template-columns:1fr 1fr}.stat{padding:14px}.head{align-items:flex-start;flex-direction:column}.catalog{padding:20px;border-radius:24px}.direction{border-radius:22px}.dircopy{padding:18px}.end{padding:26px;align-items:flex-start;flex-direction:column}.nda-gate{padding:12px}.nda-gate__card{border-radius:24px;padding:24px 20px}.nda-gate__row{grid-template-columns:1fr}.nda-gate__submit{min-height:48px}.cursor-glow,.cursor-dot{display:none}}
+</style>
+</head>
+<body>
+<div class="nda-gate" id="ndaGate" role="dialog" aria-modal="true" aria-labelledby="ndaGateTitle">
+  <div class="nda-gate__card">
+    <div class="nda-gate__brand"><img src="data:image/png;base64,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" alt="Osku Halla logo"><span>Kseniia Smirnova / Osku Halla</span></div>
+    <div class="nda-gate__eyebrow">Portfolio access · NDA</div>
+    <h2 id="ndaGateTitle">Private portfolio access.</h2>
+    <p class="nda-gate__copy">Some projects in this portfolio include confidential or NDA-covered materials. To keep review access controlled, this portfolio is protected by an access code. A review code has been assigned for this portfolio review and is shown below.</p>
+    <form id="ndaGateForm" novalidate>
+      <div class="nda-gate__row"><input class="nda-gate__input" id="ndaGateInput" type="password" autocomplete="off" placeholder="Paste your access code"><button class="nda-gate__submit" type="submit">Enter portfolio ↗</button></div>
+      <div class="nda-gate__code-wrap"><button class="nda-gate__code" id="ndaGateCode" type="button">OSKU-NDA-7K4R-26!</button><div class="nda-gate__code-note"><b>↖ Copy this code</b><br>and paste it above.</div></div>
+      <div class="nda-gate__error" id="ndaGateError">That access code is incorrect. Please try again.</div>
+    </form>
+    <p class="nda-gate__fineprint">Access is intended only for portfolio review. Please do not redistribute confidential project materials without permission from Kseniia S. (contact via Telegram: <a href="https://t.me/oskuarttt" target="_blank">@oskuarttt</a>).</p>
+  </div>
+</div>
+<div class="cursor-glow" aria-hidden="true"></div><div class="cursor-dot" aria-hidden="true"></div>
+<div class="shell">
+<nav>
+  <a class="brand" href="index.html#work"><img src="data:image/png;base64,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" alt="Osku Halla logo"><span>Kseniia Smirnova / Osku Halla</span></a>
+  <div class="navlinks"><a href="index.html#work">← Portfolio</a><a href="#catalog">Catalog system</a><a href="#visuals">Visuals</a></div>
+  <div class="navmeta">Printari case study · Middle+/Senior Designer</div>
+</nav>
+<main>
+  <header class="hero">
+    <div><div class="eyebrow">Commercial experience · Printari</div><h1>PRINT<span class="accent">ARI</span></h1></div>
+    <div><img class="printari-mark" src="assets/printari/printari-logo.png" alt="Printari logo"><p class="hero-copy">I owned the brand's visual direction end to end: marketplace communication, market-led creative concepts, production standards and internal design operations.</p><div class="roleline"><span class="tag">Middle+/Senior Designer</span><span class="tag">Visual ownership</span><span class="tag">E-commerce</span><span class="tag">Design systems</span></div></div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b>30</b><span>visual assets shown in this case set</span></div>
+    <div class="stat"><b>4</b><span>market-informed visual directions</span></div>
+    <div class="stat"><b>5</b><span>product categories structured in the print catalog</span></div>
+    <div class="stat"><b>1</b><span>unified internal catalog and filtering workflow</span></div>
+  </div>
+
+  <section>
+    <div class="head"><h2>What I owned</h2><p>My role went beyond producing layouts. I was responsible for how the brand looked, how new visual ideas were generated and how the design workflow itself could become more structured.</p></div>
+    <div class="ownership">
+      <article class="own"><small>01 · Art direction</small><h3>Brand visual ownership</h3><p>Maintained and developed the visual language across marketplace cards, promotional graphics, product presentation and print materials, keeping the brand recognizable while pushing stronger new concepts.</p></article>
+      <article class="own"><small>02 · Market analysis</small><h3>Ideas backed by research</h3><p>Reviewed competitors, category conventions and marketplace patterns before proposing new visual directions. The goal was not decoration for decoration's sake, but clearer product value and stronger shelf differentiation.</p></article>
+      <article class="own"><small>03 · Design operations</small><h3>A clearer team workflow</h3><p>Initiated a more structured approach to designer work: reusable logic for assets, clearer organization, tagging and a shared system for finding, checking and maintaining a growing print library.</p></article>
+    </div>
+  </section>
+
+  <section id="catalog">
+    <div class="head"><h2>Print catalog system</h2><p>My largest internal project: a browser-based tool for working with a large print library, designed to replace manual searching and duplicate checking with a much clearer visual workflow.</p></div>
+    <div class="catalog">
+      <div>
+        <div class="eyebrow" style="color:var(--lime)">Internal tool · UX + logic + automation</div>
+        <h3>One place for every print.</h3>
+        <p>I proposed and developed the structure of a dedicated print-management website. It combines previews, metadata and filters with an automated similarity layer, so designers can spot repeated graphics before preparing another version of the same asset.</p>
+        <div class="feature-list"><span>Automatic duplicate highlighting</span><span>Pixel-analysis similarity script</span><span>Tagging system</span><span>Tag-based filters</span><span>Searchable asset library</span><span>Product category structure</span></div>
+      </div>
+      <div class="demo"><span class="demo-label">LIVE DEMO PREVIEW</span><img src="assets/printari/catalog-demo.webp" alt="Animated demo of the Printari print catalog interface"></div>
+    </div>
+    <div class="impact">
+      <div class="stat"><b>~60%</b><span>less manual duplicate-check effort, workflow estimate</span></div>
+      <div class="stat"><b>~40%</b><span>faster asset lookup, workflow estimate</span></div>
+      <div class="stat"><b>5</b><span>catalog categories in one consistent structure</span></div>
+      <div class="stat"><b>100%</b><span>tag-filterable coverage for assets entered into the system</span></div>
+    </div>
+    <p class="note" style="margin-top:14px">Figures marked with ~ are process estimates based on removed manual steps and the proposed workflow, not company-reported revenue or campaign analytics.</p>
+  </section>
+
+  <section id="visuals">
+    <div class="head"><h2>Market-led visuals</h2><p>Four visual directions developed from marketplace research. Each system solves a slightly different communication task while staying inside one brand ecosystem.</p></div>
+
+    <article class="direction"><img src="assets/printari/direction-1.jpg" alt="Printari dark premium phone case visual direction"><div class="dircopy"><div><div class="eyebrow">Direction 01</div><h3>Dark tactile product focus</h3><div class="metricline"><span>7 visuals</span><span>premium product story</span></div></div><p>A darker, more editorial approach built around material, close-up product detail and controlled contrast. I used it to move away from generic marketplace whiteness and give the product a more premium, object-focused feel.</p></div></article>
+
+    <article class="direction"><img src="assets/printari/direction-2.jpg" alt="Printari bright phone case visual direction"><div class="dircopy"><div><div class="eyebrow">Direction 02</div><h3>Bright everyday utility</h3><div class="metricline"><span>7 visuals</span><span>feature-first hierarchy</span></div></div><p>A cleaner and brighter system for fast product reading. The composition keeps the case central while lifestyle props, close-ups and benefit callouts make functionality easier to scan on a marketplace feed.</p></div></article>
+
+    <article class="direction"><img src="assets/printari/direction-3.jpg" alt="Printari blue passport cover visual direction"><div class="dircopy"><div><div class="eyebrow">Direction 03</div><h3>Universal passport cover system</h3><div class="metricline"><span>8 visuals</span><span>multi-country compatibility message</span></div></div><p>A blue travel-led direction for passport covers, balancing product protection, print quality and universal fit. The system was designed to communicate compatibility quickly without turning the card into a wall of copy.</p></div></article>
+
+    <article class="direction"><img src="assets/printari/direction-4.jpg" alt="Printari travel lifestyle passport cover direction"><div class="dircopy"><div><div class="eyebrow">Direction 04</div><h3>Travel lifestyle narrative</h3><div class="metricline"><span>8 visuals</span><span>benefit-led storytelling</span></div></div><p>A warmer lifestyle story using luggage, airport and travel cues. It connects the passport cover to the situation where it is actually used, while keeping the product clearly visible and commercially readable.</p></div></article>
+  </section>
+
+  <section><div class="end"><div><div class="eyebrow" style="color:#111">Printari · Case complete</div><h2>Design,<br>system,<br>workflow.</h2></div><a class="back" href="index.html#work">Back to portfolio ↗</a></div><footer><span>© 2026 OSKU</span><span>Kseniia Smirnova / Osku Halla</span><span>Graphic Designer · Illustrator</span></footer></section>
+</main>
+</div>
+<script>
+(function(){
+  var ACCESS_CODE='OSKU-NDA-7K4R-26!';
+  var gate=document.getElementById('ndaGate');
+  var form=document.getElementById('ndaGateForm');
+  var input=document.getElementById('ndaGateInput');
+  var error=document.getElementById('ndaGateError');
+  var code=document.getElementById('ndaGateCode');
+  var unlocked=false;
+  try{unlocked=sessionStorage.getItem('oskuPortfolioAccess')==='granted'}catch(e){}
+  function openGate(){gate.classList.add('is-open');document.body.classList.remove('nda-locked');setTimeout(function(){if(gate)gate.remove()},380)}
+  if(unlocked){openGate()}else{document.body.classList.add('nda-locked');setTimeout(function(){input.focus()},120)}
+  form.addEventListener('submit',function(e){e.preventDefault();if(input.value.trim()===ACCESS_CODE){try{sessionStorage.setItem('oskuPortfolioAccess','granted')}catch(x){}error.classList.remove('show');openGate()}else{error.classList.add('show');input.select()}});
+  code.addEventListener('click',function(){if(navigator.clipboard){navigator.clipboard.writeText(ACCESS_CODE).then(function(){var old=code.textContent;code.textContent='Copied ✓';setTimeout(function(){code.textContent=old},1200)})}else{input.value=ACCESS_CODE;input.focus();input.select()}});
+})();
+(function(){
+  var glow=document.querySelector('.cursor-glow'),dot=document.querySelector('.cursor-dot');
+  if(!window.matchMedia('(pointer:fine)').matches||window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var gx=innerWidth/2,gy=innerHeight/2,tx=gx,ty=gy;
+  document.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;dot.style.transform='translate3d('+tx+'px,'+ty+'px,0) translate(-50%,-50%)';document.body.classList.add('cursor-ready')},{passive:true});
+  function loop(){gx+=(tx-gx)*.18;gy+=(ty-gy)*.18;glow.style.transform='translate3d('+gx+'px,'+gy+'px,0) translate(-50%,-50%)';requestAnimationFrame(loop)}loop();
+  document.querySelectorAll('a,button').forEach(function(el){el.addEventListener('mouseenter',function(){document.body.classList.add('cursor-hover')});el.addEventListener('mouseleave',function(){document.body.classList.remove('cursor-hover')})});
+})();
+</script>
+</body></html>

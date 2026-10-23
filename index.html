@@ -666,6 +666,16 @@ body.nda-locked{overflow:hidden}
 @media(max-width:620px){.nda-gate{padding:12px;align-items:center}.nda-gate__card{border-radius:24px;padding:24px 20px}.nda-gate__brand{margin-bottom:24px}.nda-gate h2{font-size:48px;margin-bottom:16px}.nda-gate__copy{font-size:12px;margin-bottom:22px}.nda-gate__row{grid-template-columns:1fr}.nda-gate__submit{min-height:48px}.nda-gate__code-wrap{margin-top:17px;align-items:center}.nda-gate__code-note{order:2;max-width:200px}}
 
 .nda-gate__fineprint a{color:var(--accent);font-weight:600;text-decoration:none}.nda-gate__fineprint a:hover{text-decoration:underline}
+
+/* Printari private portfolio card */
+.pc--printari{grid-column:1/-1!important;background:#efeee8!important;color:var(--ink)!important;overflow:hidden!important}
+.pc--printari .pc__content{max-width:62%!important}
+.pc--printari .pc__logo{position:absolute;right:9%!important;top:50%!important;width:94px!important;height:116px!important;object-fit:contain!important;transform:translateY(-50%) scale(1)!important;transition:transform .38s cubic-bezier(.2,.8,.2,1)!important;filter:drop-shadow(0 12px 16px rgba(17,18,15,.08))!important}
+.pc--printari:hover .pc__logo{transform:translateY(-50%) scale(1.07)!important}
+.pc--printari:after{content:"MIDDLE+ / SENIOR";position:absolute;right:22%;bottom:26px;font:600 9px "Space Grotesk",sans-serif;letter-spacing:.1em;color:var(--muted);z-index:3}
+@media(max-width:720px){.pc--printari{grid-column:auto!important}.pc--printari .pc__content{max-width:72%!important}.pc--printari .pc__logo{right:8%!important;width:72px!important;height:90px!important}.pc--printari:after{display:none!important}}
+@media(max-width:520px){.pc--printari .pc__content{max-width:100%!important}.pc--printari .pc__logo{right:72px!important;top:auto!important;bottom:14px!important;width:58px!important;height:72px!important;transform:none!important;opacity:.92!important}.pc--printari:hover .pc__logo{transform:scale(1.05)!important}}
+
 </style>
 </head>
 <body>
@@ -773,6 +783,17 @@ body.nda-locked{overflow:hidden}
         <img class="pc__art" src="smeshariki.png" alt="Смешарики illustration">
         <b>↗</b>
       </a>
+
+      <a class="pc pc--printari" href="printari.html">
+        <div class="pc__content">
+          <small>Private portfolio · 03</small>
+          <h3>Printari</h3>
+          <p>Brand visual ownership, market-led e-commerce concepts, design operations and an internal print-catalog system.</p>
+        </div>
+        <img class="pc__logo" src="assets/printari/printari-logo.png" alt="Printari logo">
+        <b>↗</b>
+      </a>
+
     </div>
   </section>
 
@@ -1045,9 +1066,7 @@ if(finePointer && !reduceMotion){
   const codeButton = document.getElementById('ndaGateCode');
   const logo = document.getElementById('ndaGateLogo');
   const siteLogo = document.querySelector('.brand img');
-  document.body.classList.add('nda-locked');
-  if (siteLogo && logo) logo.src = siteLogo.src;
-  const unlock = () => {gate.classList.add('is-open');document.body.classList.remove('nda-locked');window.setTimeout(() => gate.remove(), 380)};
+  let alreadyUnlocked=false;try{alreadyUnlocked=sessionStorage.getItem('oskuPortfolioAccess')==='granted'}catch(_){}\n  document.body.classList.add('nda-locked');\n  if (siteLogo && logo) logo.src = siteLogo.src;\n  const unlock = () => {try{sessionStorage.setItem('oskuPortfolioAccess','granted')}catch(_){}gate.classList.add('is-open');document.body.classList.remove('nda-locked');window.setTimeout(() => gate.remove(), 380)};\n  if(alreadyUnlocked){unlock();return;}
   form.addEventListener('submit', (event) => {event.preventDefault();if (input.value.trim() === ACCESS_CODE){error.classList.remove('show');unlock();return}error.classList.remove('show');void error.offsetWidth;error.classList.add('show');input.select()});
   codeButton.addEventListener('click', async () => {try{await navigator.clipboard.writeText(ACCESS_CODE);const old=codeButton.textContent;codeButton.textContent='Copied ✓';window.setTimeout(()=>{codeButton.textContent=old},1200)}catch(_){input.value=ACCESS_CODE;input.focus();input.select()}});
   window.setTimeout(() => input.focus(), 120);
