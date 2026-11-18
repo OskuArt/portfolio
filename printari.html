@@ -11,7 +11,6 @@
 <style>
 :root{--bg:#f5f5f0;--paper:#fbfbf7;--ink:#11120f;--muted:#74766f;--accent:#f28a5b;--lime:#dcff51;--line:#d9dad3}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
-body.nda-locked{overflow:hidden}
 .shell{width:min(1180px,calc(100% - 34px));margin:0 auto;padding:18px 0 70px}
 nav{position:sticky;top:14px;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:10px 12px;border:1px solid rgba(217,218,211,.9);border-radius:18px;background:rgba(251,251,247,.86);backdrop-filter:blur(18px)}
 .brand{display:flex;align-items:center;gap:10px;width:max-content;font:600 13px "Space Grotesk"}.brand img{width:38px;height:38px;object-fit:contain}
@@ -37,20 +36,6 @@ footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);fo
 </style>
 </head>
 <body>
-<div class="nda-gate" id="ndaGate" role="dialog" aria-modal="true" aria-labelledby="ndaGateTitle">
-  <div class="nda-gate__card">
-    <div class="nda-gate__brand"><img src="data:image/png;base64,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" alt="Osku Halla logo"><span>Kseniia Smirnova / Osku Halla</span></div>
-    <div class="nda-gate__eyebrow">Portfolio access · NDA</div>
-    <h2 id="ndaGateTitle">Private portfolio access.</h2>
-    <p class="nda-gate__copy">Some projects in this portfolio include confidential or NDA-covered materials. To keep review access controlled, this portfolio is protected by an access code. A review code has been assigned for this portfolio review and is shown below.</p>
-    <form id="ndaGateForm" novalidate>
-      <div class="nda-gate__row"><input class="nda-gate__input" id="ndaGateInput" type="password" autocomplete="off" placeholder="Paste your access code"><button class="nda-gate__submit" type="submit">Enter portfolio ↗</button></div>
-      <div class="nda-gate__code-wrap"><button class="nda-gate__code" id="ndaGateCode" type="button">OSKU-NDA-7K4R-26!</button><div class="nda-gate__code-note"><b>↖ Copy this code</b><br>and paste it above.</div></div>
-      <div class="nda-gate__error" id="ndaGateError">That access code is incorrect. Please try again.</div>
-    </form>
-    <p class="nda-gate__fineprint">Access is intended only for portfolio review. Please do not redistribute confidential project materials without permission from Kseniia S. (contact via Telegram: <a href="https://t.me/oskuarttt" target="_blank">@oskuarttt</a>).</p>
-  </div>
-</div>
 <div class="cursor-glow" aria-hidden="true"></div><div class="cursor-dot" aria-hidden="true"></div>
 <div class="shell">
 <nav>
@@ -106,20 +91,6 @@ footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);fo
 </main>
 </div>
 <script>
-(function(){
-  var ACCESS_CODE='OSKU-NDA-7K4R-26!';
-  var gate=document.getElementById('ndaGate');
-  var form=document.getElementById('ndaGateForm');
-  var input=document.getElementById('ndaGateInput');
-  var error=document.getElementById('ndaGateError');
-  var code=document.getElementById('ndaGateCode');
-  var unlocked=false;
-  try{unlocked=sessionStorage.getItem('oskuPortfolioAccess')==='granted'}catch(e){}
-  function openGate(){gate.classList.add('is-open');document.body.classList.remove('nda-locked');setTimeout(function(){if(gate)gate.remove()},380)}
-  if(unlocked){openGate()}else{document.body.classList.add('nda-locked');setTimeout(function(){input.focus()},120)}
-  form.addEventListener('submit',function(e){e.preventDefault();if(input.value.trim()===ACCESS_CODE){try{sessionStorage.setItem('oskuPortfolioAccess','granted')}catch(x){}error.classList.remove('show');openGate()}else{error.classList.add('show');input.select()}});
-  code.addEventListener('click',function(){if(navigator.clipboard){navigator.clipboard.writeText(ACCESS_CODE).then(function(){var old=code.textContent;code.textContent='Copied ✓';setTimeout(function(){code.textContent=old},1200)})}else{input.value=ACCESS_CODE;input.focus();input.select()}});
-})();
 (function(){
   var glow=document.querySelector('.cursor-glow'),dot=document.querySelector('.cursor-dot');
   if(!window.matchMedia('(pointer:fine)').matches||window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
